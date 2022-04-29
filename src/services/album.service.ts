@@ -8,6 +8,7 @@ import {CreateAlbumDto} from "../dto/create-album.dto";
 import {FileService, FileType} from "./file.service";
 import {AddTracksToAlbumDto} from "../dto/create-track.dto";
 import {UpdateAlbumDto} from "../dto/update-album.dto";
+import * as mongodb from "mongodb";
 
 @Injectable()
 export class AlbumService {
@@ -86,6 +87,15 @@ export class AlbumService {
                     .findById(item)
                     .updateOne({}, {album: null});
             }
+
+            for (const trackId of dto.tracks) {
+                const track = await this.trackModel.findById(trackId);
+
+                const mongoose = require('mongoose');
+
+                track.album = mongoose.Types.ObjectId(id);
+                await track.save();
+            }
         }
 
         const album = await this.albumModel.findByIdAndUpdate(id, {
@@ -93,14 +103,6 @@ export class AlbumService {
             picture: picturePath
         })
             .setOptions({overwrite: true, new: true});
-
-        if (dto.tracks) {
-            for (const trackId of dto.tracks) {
-                const track = await this.trackModel.findById(trackId);
-                track.album = album._id;
-                await track.save();
-            }
-        }
 
         return album;
     }
