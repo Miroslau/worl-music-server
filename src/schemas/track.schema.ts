@@ -38,7 +38,7 @@ export class Track {
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Album' })
     album: Album;
 
-    @ApiProperty({example: ['commentId'], description: `id comment`})
+    @ApiProperty({example: ['string'], description: `id comment`})
     @Prop({ type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Comment'}] })
     comments: Comment[];
 }

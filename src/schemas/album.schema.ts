@@ -14,14 +14,14 @@ export class Album {
     name: string;
 
     @ApiProperty({example: 'string', description: `Artist's name`})
-    @Prop({ type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Author'}] })
-    author: Author[];
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Author' })
+    author: Author;
 
     @ApiProperty({example: 'string', description: `Url image`})
     @Prop()
     picture: string;
 
-    @ApiProperty({example: ['trackId'], description: `Id Track`})
+    @ApiProperty({example: ['string'], description: `Id Track`})
     @Prop({ type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Track'}] })
     tracks: Track[];
 }

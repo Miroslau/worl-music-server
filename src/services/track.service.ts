@@ -1,4 +1,4 @@
-import {Injectable} from "@nestjs/common";
+import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
 import {Track, TrackDocument} from "../schemas/track.schema";
 import {InjectModel} from "@nestjs/mongoose";
 import {Model, ObjectId} from "mongoose";
@@ -17,9 +17,22 @@ export class TrackService {
                 @InjectModel(Author.name) private authorModel: Model<AuthorDocument>,
                 private fileService: FileService) {}
 
-    async create(dto: CreateTrackDto, picture, audio): Promise<Track> {
-        const audioPath = this.fileService.createFile(FileType.AUDIO, audio);
-        const picturePath = this.fileService.createFile(FileType.IMAGE, picture);
+    async create(dto: CreateTrackDto, files): Promise<Track> {
+        if (!files.audio) {
+            throw new HttpException('The audio has not found', HttpStatus.NOT_FOUND);
+        }
+
+        if (!dto.name) {
+            throw new HttpException('The track name has not found', HttpStatus.NOT_FOUND);
+        }
+
+        if (!dto.artist) {
+            throw new HttpException('The artists have not found', HttpStatus.NOT_FOUND);
+        }
+
+        const { picture, audio } = files;
+        const audioPath = this.fileService.createFile(FileType.AUDIO, audio[0]);
+        const picturePath = this.fileService.createFile(FileType.IMAGE, picture[0]);
         const track = await this.trackModel.create({
             ...dto,
             listens: 0,

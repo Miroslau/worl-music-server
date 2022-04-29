@@ -11,7 +11,7 @@ import * as path from 'path';
     imports: [
         ServeStaticModule.forRoot({rootPath: path.resolve(__dirname, '..', 'static')}),
         TrackModule,
-        MongooseModule.forRoot('mongodb://localhost:27017/music-platform'),
+        MongooseModule.forRoot('mongodb://mongo/music-platform'),
         FileModule,
         AuthorModule,
         AlbumModule

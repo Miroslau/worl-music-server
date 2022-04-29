@@ -14,3 +14,12 @@ export class CreateTrackDto {
     @ApiProperty({example: 'string'})
     readonly albumId: ObjectId;
 }
+
+export class AddTracksToAlbumDto extends CreateTrackDto{
+    constructor() {
+        super();
+    }
+
+    @ApiProperty({example: ['string']})
+    readonly tracks: [ObjectId]
+}
