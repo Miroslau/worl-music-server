@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post, Put, Query, UploadedFiles, UseInterceptors} from "@nestjs/common";
+import {Body, Controller, Delete, Get, Param, Post, Put, Query, UploadedFiles, UseInterceptors} from "@nestjs/common";
 import {ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {FileFieldsInterceptor} from "@nestjs/platform-express";
 import {AlbumService} from "../services/album.service";
@@ -52,6 +52,9 @@ export class AlbumController {
         return this.albumService.getById(id);
     }
 
+    @ApiOperation({summary: 'update album'})
+    @ApiBody({type: UpdateAlbumDto})
+    @ApiResponse({status: 200, type: Album})
     @Put(':id')
     @UseInterceptors(FileFieldsInterceptor([
         { name: 'picture', maxCount: 1 }
@@ -64,5 +67,10 @@ export class AlbumController {
         return this.albumService.update(id, dto, picture[0]);
     }
 
-    delete () {}
+    @ApiOperation({summary: 'delete album'})
+    @ApiResponse({status: 200})
+    @Delete(':id')
+    delete (@Param('id') id: string) {
+        return this.albumService.delete(id)
+    }
 }

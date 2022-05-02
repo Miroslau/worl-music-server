@@ -1,14 +1,13 @@
 import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
 import {InjectModel} from "@nestjs/mongoose";
 import {Album, AlbumDocument} from "../schemas/album.schema";
-import {Model} from "mongoose";
+import {Model, ObjectId} from "mongoose";
 import {Author, AuthorDocument} from "../schemas/author.schema";
 import {Track, TrackDocument} from "../schemas/track.schema";
 import {CreateAlbumDto} from "../dto/create-album.dto";
 import {FileService, FileType} from "./file.service";
 import {AddTracksToAlbumDto} from "../dto/create-track.dto";
 import {UpdateAlbumDto} from "../dto/update-album.dto";
-import * as mongodb from "mongodb";
 
 @Injectable()
 export class AlbumService {
@@ -40,8 +39,11 @@ export class AlbumService {
 
         for (const trackId of dto.tracks) {
             const track = await this.trackModel.findById(trackId);
-            track.album = album._id;
-            album.tracks.push(track._id);
+            const includeTrack = album.tracks.includes(track._id);
+            if (!includeTrack) {
+                track.album = album._id;
+                album.tracks.push(track._id);
+            }
             await track.save();
         }
 
@@ -107,6 +109,21 @@ export class AlbumService {
         return album;
     }
 
-    async delete () {}
+    async delete (id: string): Promise<ObjectId> {
+        const album = await this.albumModel.findByIdAndDelete(id);
+        const author = await this.authorModel.findById(album.author);
+        const authorIndex = author.album.indexOf(album._id);
+
+        if (authorIndex !== -1) author.album.splice(authorIndex, 1);
+        await author.save();
+
+        for (const trackId of album.tracks) {
+            await this.trackModel
+                .findById(trackId)
+                .updateOne({}, {album: null});
+        }
+
+        return album._id;
+    }
 
 }
