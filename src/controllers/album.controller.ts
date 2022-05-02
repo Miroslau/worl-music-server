@@ -1,4 +1,16 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, Query, UploadedFiles, UseInterceptors} from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Post,
+    Put,
+    Query,
+    UploadedFiles,
+    UseGuards,
+    UseInterceptors
+} from "@nestjs/common";
 import {ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {FileFieldsInterceptor} from "@nestjs/platform-express";
 import {AlbumService} from "../services/album.service";
@@ -7,6 +19,7 @@ import {Album} from "../schemas/album.schema";
 import {AddTracksToAlbumDto} from "../dto/create-track.dto";
 import {ObjectId} from "mongoose";
 import {UpdateAlbumDto} from "../dto/update-album.dto";
+import {JwtAuthGuard} from "../guards/jwt-auth.guard";
 
 @ApiTags('Album')
 @Controller('/album')
@@ -39,6 +52,7 @@ export class AlbumController {
     @ApiResponse({status: 200, type: [Album]})
     @ApiQuery({name: 'count', example: 4})
     @ApiQuery({name: 'offset', example: 0})
+    @UseGuards(JwtAuthGuard)
     @Get('/getAll')
     getAll (@Query('count') count: number,
             @Query('offset') offset: number) {
