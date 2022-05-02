@@ -13,9 +13,11 @@ export class Comment {
     @Prop()
     username: string;
 
+    @ApiProperty({example: 'string', description: 'text'})
     @Prop()
     text: string;
 
+    @ApiProperty({example: 'string', description: 'track'})
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Track' })
     track: Track
 }

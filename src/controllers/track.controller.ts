@@ -6,6 +6,7 @@ import {CreateCommentDto} from "../dto/create-comment.dto";
 import {FileFieldsInterceptor} from "@nestjs/platform-express";
 import {ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {Track} from "../schemas/track.schema";
+import {Comment} from "../schemas/comment.schema";
 
 
 @ApiTags('Track')
@@ -44,16 +45,23 @@ export class TrackController {
         return this.trackService.search(query);
     }
 
+    @ApiOperation({summary: 'get track by id'})
+    @ApiResponse({status: 200, type: Track})
     @Get(':id')
      getById(@Param('id') id: ObjectId) {
         return this.trackService.getById(id);
     }
 
+    @ApiOperation({summary: 'delete track'})
+    @ApiResponse({status: 200})
     @Delete(':id')
      delete(@Param('id') id: ObjectId) {
         return this.trackService.delete(id);
     }
 
+    @ApiOperation({summary: 'add comment by track'})
+    @ApiBody({type: CreateCommentDto})
+    @ApiResponse({status: 200, type: Comment})
     @Post('/comment')
     addComment(@Body() dto: CreateCommentDto) {
         return this.trackService.addComment(dto);
