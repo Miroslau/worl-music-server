@@ -12,6 +12,7 @@ import {RolesModule} from "./roles.module";
 import {User} from "../model/users.model";
 import {UserRoles} from "../model/user-roles.model";
 import {Role} from "../model/roles.model";
+import {AuthModule} from "./auth.module";
 
 @Module({
     imports: [
@@ -33,7 +34,8 @@ import {Role} from "../model/roles.model";
         AuthorModule,
         AlbumModule,
         UserModule,
-        RolesModule
+        RolesModule,
+        AuthModule
     ]
 })
 export class AppModule {}

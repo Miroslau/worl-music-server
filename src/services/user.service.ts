@@ -27,7 +27,10 @@ export class UserService {
         return users;
     }
 
-    async getByEmail () {}
+    async getByEmail (email: string): Promise<User> {
+        const user = await this.userRepository.findOne({where: {email}, include: {all: true}});
+        return user;
+    }
 
     async addRole (dto: AddRoleDto): Promise<AddRoleDto> {
         const user = await this.userRepository.findByPk(dto.userId);
