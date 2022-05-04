@@ -1,8 +1,9 @@
-import {ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {ApiBody, ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {Body, Controller, Delete, Get, Param, Post, Put} from "@nestjs/common";
 import {RolesService} from "../services/roles.service";
 import {CreateRoleDto} from "../dto/create-role.dto";
 import {Role} from "../model/roles.model";
+import {AddRoleDto} from "../dto/add-role.dto";
 
 @ApiTags('Role')
 @Controller('roles')
@@ -11,6 +12,7 @@ export class RolesController {
     constructor(private rolesService: RolesService) {}
 
     @ApiOperation({summary: 'Create Role'})
+    @ApiBody({type: CreateRoleDto})
     @ApiResponse({status: 201, type: Role})
     @Post('/addRole')
     create (@Body() dto: CreateRoleDto) {
