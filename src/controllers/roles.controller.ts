@@ -1,9 +1,11 @@
 import {ApiBody, ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {Body, Controller, Delete, Get, Param, Post, Put} from "@nestjs/common";
+import {Body, Controller, Delete, Get, Param, Post, Put, UseGuards} from "@nestjs/common";
 import {RolesService} from "../services/roles.service";
 import {CreateRoleDto} from "../dto/create-role.dto";
 import {Role} from "../model/roles.model";
 import {AddRoleDto} from "../dto/add-role.dto";
+import {Roles} from "../decorators/roles-auth.decorator";
+import {RolesGuard} from "../guards/roles.guard";
 
 @ApiTags('Role')
 @Controller('roles')
@@ -14,6 +16,8 @@ export class RolesController {
     @ApiOperation({summary: 'Create Role'})
     @ApiBody({type: CreateRoleDto})
     @ApiResponse({status: 201, type: Role})
+    @Roles('admin')
+    @UseGuards(RolesGuard)
     @Post('/addRole')
     create (@Body() dto: CreateRoleDto) {
         return this.rolesService.create(dto);
@@ -21,6 +25,8 @@ export class RolesController {
 
     @ApiOperation({summary: 'Get All roles'})
     @ApiResponse({status: 200, type: [Role]})
+    @Roles('admin')
+    @UseGuards(RolesGuard)
     @Get('/getAllRoles')
     getAll () {
         return this.rolesService.getAll();
@@ -28,6 +34,8 @@ export class RolesController {
 
     @ApiOperation({summary: 'Get Role by value'})
     @ApiResponse({status: 200, type: Role})
+    @Roles('admin')
+    @UseGuards(RolesGuard)
     @Get('/getRole/:value')
     getByValue (@Param('value') value: string) {
         return this.rolesService.getByValue(value);
@@ -35,6 +43,8 @@ export class RolesController {
 
     @ApiOperation({summary: 'Update role by id'})
     @ApiResponse({status: 200 })
+    @Roles('admin')
+    @UseGuards(RolesGuard)
     @Put('/updateRole/:id')
     update (@Param('id') id: number,
             @Body() dto: CreateRoleDto) {
@@ -43,6 +53,8 @@ export class RolesController {
 
     @ApiOperation({summary: 'Delete role by id'})
     @ApiResponse({status: 200 })
+    @Roles('admin')
+    @UseGuards(RolesGuard)
     @Delete('/deleteRole/:id')
     delete (@Param('id') id: number) {
         return this.rolesService.delete(id);
