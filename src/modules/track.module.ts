@@ -1,4 +1,4 @@
-import {Module} from "@nestjs/common";
+import {forwardRef, Module} from "@nestjs/common";
 import {TrackController} from "../controllers/track.controller";
 import {TrackService} from "../services/track.service";
 import {MongooseModule} from "@nestjs/mongoose";
@@ -7,6 +7,7 @@ import {Comment, CommentSchema} from "../schemas/comment.schema";
 import {FileService} from "../services/file.service";
 import {Author, AuthorSchema} from "../schemas/author.schema";
 import {Album, AlbumSchema} from "../schemas/album.schema";
+import {AuthModule} from "./auth.module";
 
 
 @Module({
@@ -15,6 +16,7 @@ import {Album, AlbumSchema} from "../schemas/album.schema";
         MongooseModule.forFeature([{ name: Comment.name, schema: CommentSchema }]),
         MongooseModule.forFeature([{ name: Author.name, schema: AuthorSchema }]),
         MongooseModule.forFeature([{name: Album.name, schema: AlbumSchema}]),
+        forwardRef(() => AuthModule),
     ],
     controllers: [TrackController],
     providers: [TrackService, FileService],
