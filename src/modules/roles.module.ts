@@ -5,7 +5,6 @@ import {Role} from "../model/roles.model";
 import {User} from "../model/users.model";
 import {UserRoles} from "../model/user-roles.model";
 import {RolesController} from "../controllers/roles.controller";
-import {RolesGuard} from "../guards/roles.guard";
 import {AuthModule} from "./auth.module";
 
 @Module({

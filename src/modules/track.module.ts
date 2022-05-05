@@ -6,6 +6,7 @@ import {Track, TrackSchema} from "../schemas/track.schema";
 import {Comment, CommentSchema} from "../schemas/comment.schema";
 import {FileService} from "../services/file.service";
 import {Author, AuthorSchema} from "../schemas/author.schema";
+import {Album, AlbumSchema} from "../schemas/album.schema";
 
 
 @Module({
@@ -13,6 +14,7 @@ import {Author, AuthorSchema} from "../schemas/author.schema";
         MongooseModule.forFeature([{ name: Track.name, schema: TrackSchema }]),
         MongooseModule.forFeature([{ name: Comment.name, schema: CommentSchema }]),
         MongooseModule.forFeature([{ name: Author.name, schema: AuthorSchema }]),
+        MongooseModule.forFeature([{name: Album.name, schema: AlbumSchema}]),
     ],
     controllers: [TrackController],
     providers: [TrackService, FileService],

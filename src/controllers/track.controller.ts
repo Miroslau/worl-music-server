@@ -55,7 +55,7 @@ export class TrackController {
     @ApiOperation({summary: 'delete track'})
     @ApiResponse({status: 200})
     @Delete(':id')
-     delete(@Param('id') id: ObjectId) {
+     delete(@Param('id') id: string) {
         return this.trackService.delete(id);
     }
 

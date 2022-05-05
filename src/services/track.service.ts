@@ -7,6 +7,7 @@ import {CreateTrackDto} from "../dto/create-track.dto";
 import {CreateCommentDto} from "../dto/create-comment.dto";
 import {FileService, FileType} from "./file.service";
 import {Author, AuthorDocument} from "../schemas/author.schema";
+import {Album, AlbumDocument} from "../schemas/album.schema";
 
 
 @Injectable()
@@ -15,6 +16,7 @@ export class TrackService {
     constructor(@InjectModel(Track.name) private trackModel: Model<TrackDocument>,
                 @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
                 @InjectModel(Author.name) private authorModel: Model<AuthorDocument>,
+                @InjectModel(Album.name) private albumModel: Model<AlbumDocument>,
                 private fileService: FileService) {}
 
     async create(dto: CreateTrackDto, files): Promise<Track> {
@@ -59,8 +61,24 @@ export class TrackService {
         return track;
     }
 
-    async delete(id: ObjectId): Promise<ObjectId> {
+    async delete(id: string): Promise<ObjectId> {
         const track = await this.trackModel.findByIdAndDelete(id);
+
+        if (track.album) {
+            const album = await this.albumModel.findById(track.album);
+            const trackIndex = album.tracks.indexOf(track._id);
+            if (trackIndex !== -1) album.tracks.splice(trackIndex, 1);
+            await album.save();
+        }
+
+        for (const authorId of track.artist) {
+            const author = await this.authorModel.findById(authorId);
+            const trackIndex = author.tracks.indexOf(track._id);
+            if (trackIndex !== -1) author.tracks.splice(trackIndex, 1);
+
+            await author.save();
+        }
+
         return track._id;
     }
 

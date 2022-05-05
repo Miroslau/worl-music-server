@@ -16,7 +16,7 @@ export class AuthService {
         return this.generateToken(user);
     }
 
-    async registration (dto: CreateUserDto): Promise<{}> {
+    async registration (dto: CreateUserDto) {
         const candidate = await this.userService.getByEmail(dto.email);
         if (candidate) throw new HttpException('An user with such a mail already exist', HttpStatus.BAD_REQUEST);
 
@@ -25,7 +25,7 @@ export class AuthService {
         return this.generateToken(user);
     }
 
-    private async generateToken (user: User): Promise<{}> {
+    private async generateToken (user: User) {
         const payload = {email: user.email, id: user.id, roles: user.roles};
         return {
             token: this.jwtService.sign(payload)

@@ -18,6 +18,7 @@ export class UserController {
 
     @ApiOperation({summary: 'Create User'})
     @ApiResponse({status: 200, type: User})
+    @UsePipes(ValidationPipe)
     @Roles('admin')
     @UseGuards(RolesGuard)
     @Post('/createUser')
