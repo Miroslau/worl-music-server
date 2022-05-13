@@ -18,8 +18,6 @@ import {FileFieldsInterceptor} from "@nestjs/platform-express";
 import {ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {Track} from "../schemas/track.schema";
 import {Comment} from "../schemas/comment.schema";
-import {Roles} from "../decorators/roles-auth.decorator";
-import {RolesGuard} from "../guards/roles.guard";
 
 
 @ApiTags('Track')
@@ -31,8 +29,6 @@ export class TrackController {
     @ApiOperation({summary: 'create track'})
     @ApiBody({type: Track})
     @ApiResponse({status: 200, type: Track})
-    @Roles('admin')
-    @UseGuards(RolesGuard)
     @Post('/addTrack')
     @UseInterceptors(FileFieldsInterceptor([
         { name: 'picture', maxCount: 1 },
@@ -69,8 +65,6 @@ export class TrackController {
 
     @ApiOperation({summary: 'delete track'})
     @ApiResponse({status: 200})
-    @Roles('admin')
-    @UseGuards(RolesGuard)
     @Delete(':id')
      delete(@Param('id') id: string) {
         return this.trackService.delete(id);

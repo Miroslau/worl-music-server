@@ -8,7 +8,6 @@ import {
     Put,
     Query,
     UploadedFiles,
-    UseGuards,
     UseInterceptors
 } from "@nestjs/common";
 import {ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
@@ -18,8 +17,6 @@ import {CreateAlbumDto} from "../dto/create-album.dto";
 import {Album} from "../schemas/album.schema";
 import {AddTracksToAlbumDto} from "../dto/create-track.dto";
 import {UpdateAlbumDto} from "../dto/update-album.dto";
-import {Roles} from "../decorators/roles-auth.decorator";
-import {RolesGuard} from "../guards/roles.guard";
 
 @ApiTags('Album')
 @Controller('/album')
@@ -30,8 +27,6 @@ export class AlbumController {
     @ApiOperation({summary: 'create album'})
     @ApiBody({type: CreateAlbumDto})
     @ApiResponse({status: 201, type: Album})
-    @Roles('admin')
-    @UseGuards(RolesGuard)
     @Post('/addAlbum')
     @UseInterceptors(FileFieldsInterceptor([
         { name: 'picture', maxCount: 1 }
@@ -44,8 +39,6 @@ export class AlbumController {
     @ApiOperation({summary: `add tracks to album`})
     @ApiBody({type: AddTracksToAlbumDto})
     @ApiResponse({status: 201, type: Album})
-    @Roles('admin')
-    @UseGuards(RolesGuard)
     @Post('/addTrackToAlbum')
     addTrackToAlbum (@Body() dto: AddTracksToAlbumDto) {
         return this.albumService.addTrackToAlbum(dto);
@@ -72,8 +65,6 @@ export class AlbumController {
     @ApiOperation({summary: 'update album'})
     @ApiBody({type: UpdateAlbumDto})
     @ApiResponse({status: 200, type: Album})
-    @Roles('admin')
-    @UseGuards(RolesGuard)
     @Put(':id')
     @UseInterceptors(FileFieldsInterceptor([
         { name: 'picture', maxCount: 1 }
@@ -88,8 +79,6 @@ export class AlbumController {
 
     @ApiOperation({summary: 'delete album'})
     @ApiResponse({status: 200})
-    @Roles('admin')
-    @UseGuards(RolesGuard)
     @Delete(':id')
     delete (@Param('id') id: string) {
         return this.albumService.delete(id)

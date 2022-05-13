@@ -1,35 +1,53 @@
 import {HttpException, HttpStatus, Injectable, UnauthorizedException} from "@nestjs/common";
 import {UserService} from "./user.service";
-import {JwtService} from "@nestjs/jwt";
 import {CreateUserDto} from "../dto/create-user.dto";
 import * as bcrypt from 'bcryptjs';
 import {User} from "../model/users.model";
+import {InjectModel} from "@nestjs/sequelize";
+import {TokensService} from "./tokens.service";
+import {AuthResponseDto} from "../dto/auth-response.dto";
 
 @Injectable()
 export class AuthService {
 
-    constructor(private userService: UserService,
-                private jwtService: JwtService) {}
+    constructor(@InjectModel(User) private userRepository: typeof User,
+                                   private userService: UserService,
+                                   private tokenService: TokensService) {}
 
-    async login (dto: CreateUserDto): Promise<{}> {
+    async login (dto: CreateUserDto): Promise<AuthResponseDto> {
         const user = await this.validateUser(dto);
-        return this.generateToken(user);
+
+        const tokens = await this.tokenService.getTokens(user);
+
+        return {
+            id: user.id,
+            email: user.email,
+            ...tokens
+        }
     }
 
-    async registration (dto: CreateUserDto) {
+    async registration (dto: CreateUserDto): Promise<AuthResponseDto> {
         const candidate = await this.userService.getByEmail(dto.email);
         if (candidate) throw new HttpException('An user with such a mail already exist', HttpStatus.BAD_REQUEST);
 
         const hashPassword = await bcrypt.hash(dto.password, 5);
         const user = await this.userService.create({...dto, password: hashPassword});
-        return this.generateToken(user);
+        const tokens = await this.tokenService.getTokens(user);
+        return {
+            id: user.id,
+            email: user.email,
+            ...tokens,
+        }
     }
 
-    private async generateToken (user: User) {
-        const payload = {email: user.email, id: user.id, roles: user.roles};
-        return {
-            token: this.jwtService.sign(payload)
+    async verifyPayload(payload: any): Promise<User> {
+        const user: User = await this.userService.getByEmail(payload.email);
+
+        if (!user) {
+            throw new UnauthorizedException();
         }
+
+        return user;
     }
 
     private async validateUser (dto: CreateUserDto): Promise<User> {

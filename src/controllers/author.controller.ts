@@ -4,8 +4,6 @@ import {AuthorService} from "../services/author.service";
 import {CreatAuthorDto} from "../dto/creat-author.dto";
 import {UpdateAuthorDto} from '../dto/update-author.dto';
 import {Author} from "../schemas/author.schema";
-import {Roles} from "../decorators/roles-auth.decorator";
-import {RolesGuard} from "../guards/roles.guard";
 
 @ApiTags('Author')
 @Controller('/author')
@@ -16,8 +14,6 @@ export class AuthorController {
     @ApiOperation({summary: 'create author'})
     @ApiBody({type: CreatAuthorDto})
     @ApiResponse({status: 201, type: Author})
-    @Roles('admin')
-    @UseGuards(RolesGuard)
     @Post('/createAuthor')
     create (@Body() dto: CreatAuthorDto) {
         return this.authorService.create(dto);
@@ -47,8 +43,6 @@ export class AuthorController {
 
     @ApiOperation({summary: 'delete author'})
     @ApiResponse({status: 200})
-    @Roles('admin')
-    @UseGuards(RolesGuard)
     @Delete(':id')
     delete (@Param('id') id: string) {
         return this.authorService.delete(id);
@@ -57,8 +51,6 @@ export class AuthorController {
     @ApiOperation({summary: 'update author'})
     @ApiBody({type: UpdateAuthorDto})
     @ApiResponse({status: 200, type: Author})
-    @Roles('admin')
-    @UseGuards(RolesGuard)
     @Put(':id')
     update (@Param('id') id: string, @Body() dto: UpdateAuthorDto) {
         return this.authorService.update(id, dto);

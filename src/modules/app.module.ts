@@ -13,6 +13,7 @@ import {User} from "../model/users.model";
 import {UserRoles} from "../model/user-roles.model";
 import {Role} from "../model/roles.model";
 import {AuthModule} from "./auth.module";
+import {TokensModule} from "./tokens.module";
 
 @Module({
     imports: [
@@ -35,7 +36,8 @@ import {AuthModule} from "./auth.module";
         AlbumModule,
         UserModule,
         RolesModule,
-        AuthModule
+        AuthModule,
+        TokensModule
     ]
 })
 export class AppModule {}

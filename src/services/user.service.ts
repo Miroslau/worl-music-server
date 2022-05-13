@@ -27,9 +27,24 @@ export class UserService {
         return users;
     }
 
+    async getById (id: string): Promise<User> {
+      const user = await this.userRepository.findOne({where: {id}, include: {all: true}});
+      return user;
+    };
+
     async getByEmail (email: string): Promise<User> {
         const user = await this.userRepository.findOne({where: {email}, include: {all: true}});
         return user;
+    }
+
+    async update (dto, id) {
+        const foundUser = await this.userRepository.findOne({where: {id: id} });
+
+        if (!foundUser) throw new HttpException('The user has not found', HttpStatus.NOT_FOUND);
+
+        const updateUser = await this.userRepository.update(dto, {where: {id: id}});
+
+        return {updateUser, created: false}
     }
 
     async addRole (dto: AddRoleDto): Promise<AddRoleDto> {

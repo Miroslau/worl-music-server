@@ -28,4 +28,10 @@ export class User extends Model<User, UserCreationAttrs> {
 
     @BelongsToMany(() => Role, () => UserRoles)
     roles: Role[];
+
+    @Column({type: DataType.STRING, allowNull: true})
+    tokenId: string;
+
+    @Column({type: DataType.DATE, allowNull: true})
+    tokenExpire: Date;
 }
