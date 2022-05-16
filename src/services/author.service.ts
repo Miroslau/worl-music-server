@@ -6,7 +6,7 @@ import {InjectModel} from "@nestjs/mongoose";
 import {UpdateAuthorDto} from "../dto/update-author.dto";
 import {Track, TrackDocument} from "../schemas/track.schema";
 import {Album, AlbumDocument} from "../schemas/album.schema";
-import {getAllAuthors} from "../agregations/author.aggregation";
+import {getAllAuthors, getAuthorById} from "../agregations/author.aggregation";
 
 @Injectable()
 export class AuthorService {
@@ -26,8 +26,9 @@ export class AuthorService {
     }
 
     async getBiId (id: string): Promise<Author> {
-        const author = await this.authorModel.findById(id).populate('album');
-        return author;
+        const author = await this.authorModel
+            .aggregate(getAuthorById(id));
+        return author[0];
     }
 
     async delete (id: string): Promise<ObjectId> {
