@@ -1,4 +1,4 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import {Injectable, } from '@nestjs/common';
 import {Author, AuthorDocument} from "../schemas/author.schema";
 import {Model, ObjectId} from "mongoose";
 import {CreatAuthorDto} from "../dto/creat-author.dto";
@@ -6,7 +6,7 @@ import {InjectModel} from "@nestjs/mongoose";
 import {UpdateAuthorDto} from "../dto/update-author.dto";
 import {Track, TrackDocument} from "../schemas/track.schema";
 import {Album, AlbumDocument} from "../schemas/album.schema";
-import {getAllAuthors} from "../agregations/author.agregation";
+import {getAllAuthors} from "../agregations/author.aggregation";
 
 @Injectable()
 export class AuthorService {
