@@ -8,6 +8,7 @@ import {CreateAlbumDto} from "../dto/create-album.dto";
 import {FileService, FileType} from "./file.service";
 import {AddTracksToAlbumDto} from "../dto/create-track.dto";
 import {UpdateAlbumDto} from "../dto/update-album.dto";
+import {getAlbumById, getAllAlbums} from "../agregations/album.aggregation";
 
 @Injectable()
 export class AlbumService {
@@ -53,11 +54,15 @@ export class AlbumService {
     }
 
     async getAll (count = 4, offset = 0): Promise<Album[]> {
-        return this.albumModel.find().skip(Number(offset)).limit(Number(count));
+        return this.albumModel
+            .aggregate(getAllAlbums())
+            .skip(Number(offset))
+            .limit(Number(count));
     }
 
     async getById (id: string): Promise<Album> {
-        return this.albumModel.findById(id).populate('tracks');
+        const album = await this.albumModel.aggregate(getAlbumById(id));
+        return album[0];
     }
 
     async update (id: string, dto: UpdateAlbumDto, picture): Promise<Album> {
