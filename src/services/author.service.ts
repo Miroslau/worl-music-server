@@ -6,7 +6,7 @@ import {InjectModel} from "@nestjs/mongoose";
 import {UpdateAuthorDto} from "../dto/update-author.dto";
 import {Track, TrackDocument} from "../schemas/track.schema";
 import {Album, AlbumDocument} from "../schemas/album.schema";
-import {getAllAuthors, getAuthorById} from "../agregations/author.aggregation";
+import {getAllAuthors, getAuthorById, searchAuthor} from "../agregations/author.aggregation";
 
 @Injectable()
 export class AuthorService {
@@ -78,9 +78,8 @@ export class AuthorService {
     }
 
     async search (query: string): Promise<Author[]> {
-        const authors = await this.authorModel.find({
-            name: {$regex: new RegExp(query, 'i')}
-        });
+        const authors = await this.authorModel
+            .aggregate(searchAuthor(query));
         return authors;
     }
 }
