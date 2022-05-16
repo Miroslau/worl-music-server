@@ -59,7 +59,7 @@ export class TrackController {
     @ApiOperation({summary: 'get track by id'})
     @ApiResponse({status: 200, type: Track})
     @Get(':id')
-     getById(@Param('id') id: ObjectId) {
+     getById(@Param('id') id: string) {
         return this.trackService.getById(id);
     }
 

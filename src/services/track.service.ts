@@ -8,6 +8,7 @@ import {CreateCommentDto} from "../dto/create-comment.dto";
 import {FileService, FileType} from "./file.service";
 import {Author, AuthorDocument} from "../schemas/author.schema";
 import {Album, AlbumDocument} from "../schemas/album.schema";
+import {getAllTracks, getTrackById, searchTrack} from "../agregations/tracks.aggregation";
 
 
 @Injectable()
@@ -52,13 +53,16 @@ export class TrackService {
     }
 
     async getAll(count = 10, offset = 0): Promise<Track[]> {
-        const tracks = await this.trackModel.find().skip(Number(offset)).limit(Number(count));
+        const tracks = await this.trackModel
+            .aggregate(getAllTracks())
+            .skip(Number(offset))
+            .limit(Number(count));
         return tracks;
     }
 
-    async getById(id: ObjectId): Promise<Track> {
-        const track = await this.trackModel.findById(id).populate('comments');
-        return track;
+    async getById(id: string): Promise<Track> {
+        const track = await this.trackModel.aggregate(getTrackById(id));
+        return track[0];
     }
 
     async delete(id: string): Promise<ObjectId> {
@@ -97,9 +101,7 @@ export class TrackService {
     }
 
     async search(query: string): Promise<Track[]> {
-        const tracks = await this.trackModel.find({
-            name: {$regex: new RegExp(query, 'i')}
-        })
+        const tracks = await this.trackModel.aggregate(searchTrack(query))
         return tracks;
     }
 }

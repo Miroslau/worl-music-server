@@ -4,7 +4,8 @@ export const getAllAuthors = () => {
     return [
         {
             '$unwind': {
-                'path': '$tracks'
+                'path': '$tracks',
+                'preserveNullAndEmptyArrays': true
             }
         }, {
             '$lookup': {
@@ -15,7 +16,8 @@ export const getAllAuthors = () => {
             }
         }, {
             '$unwind': {
-                'path': '$tracks'
+                'path': '$tracks',
+                'preserveNullAndEmptyArrays': true
             }
         }, {
             '$project': {
