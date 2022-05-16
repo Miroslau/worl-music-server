@@ -125,7 +125,8 @@ export const searchAuthor = (query: string) => {
             }
         }, {
             '$unwind': {
-                'path': '$tracks'
+                'path': '$tracks',
+                'preserveNullAndEmptyArrays': true
             }
         }, {
             '$lookup': {
@@ -136,7 +137,8 @@ export const searchAuthor = (query: string) => {
             }
         }, {
             '$unwind': {
-                'path': '$tracks'
+                'path': '$tracks',
+                'preserveNullAndEmptyArrays': true
             }
         }, {
             '$project': {
