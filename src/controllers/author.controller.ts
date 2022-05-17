@@ -1,58 +1,83 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
-import {ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {AuthorService} from "../services/author.service";
-import {CreatAuthorDto} from "../dto/creat-author.dto";
-import {UpdateAuthorDto} from '../dto/update-author.dto';
-import {Author} from "../schemas/author.schema";
+import {
+    Body,
+    Controller,
+    Delete,
+    Get, HttpCode,
+    Param,
+    Post,
+    Put,
+    Query,
+} from '@nestjs/common';
+
+import {
+    ApiBody,
+    ApiOperation,
+    ApiQuery,
+    ApiResponse,
+    ApiTags,
+} from '@nestjs/swagger';
+
+import { ObjectId } from 'mongoose';
+
+import { CreatAuthorDto } from '../dto/creat-author.dto';
+import { UpdateAuthorDto } from '../dto/update-author.dto';
+
+import { Author } from '../schemas/author.schema';
+
+import { AuthorService } from '../services/author.service';
 
 @ApiTags('Author')
 @Controller('/authors')
 export class AuthorController {
 
-    constructor(private authorService: AuthorService) {}
+    constructor(private readonly __authorService__: AuthorService) {}
 
-    @ApiOperation({summary: 'create author'})
-    @ApiBody({type: CreatAuthorDto})
-    @ApiResponse({status: 201, type: Author})
-    @Post('/createAuthor')
-    create (@Body() dto: CreatAuthorDto) {
-        return this.authorService.create(dto);
+    @ApiOperation({ summary: 'Create author' })
+    @ApiBody({ type: CreatAuthorDto })
+    @ApiResponse({ status: 200, type: Author })
+    @Post()
+    @HttpCode(200)
+    async createAuthor(@Body() dto: CreatAuthorDto): Promise<Author> {
+      return this.__authorService__.createAuthor(dto);
     }
 
-    @ApiOperation({summary: 'get all authors'})
-    @ApiResponse({status: 200, type: [Author]})
-    @Get('/getAll')
-    getAll () {
-        return this.authorService.getAll();
+    @ApiOperation({ summary: 'Get all authors' })
+    @ApiResponse({ type: [Author] })
+    @Get('')
+    async getAllAuthors(): Promise<Author[]> {
+      return this.__authorService__.getAllAuthors();
     }
 
-    @ApiOperation({summary: 'search Author'})
-    @ApiResponse({status: 200, type: [Author]})
-    @ApiQuery({name: 'query', example: 'Alex'})
+    @ApiOperation({ summary: 'Search author' })
+    @ApiResponse({ type: [Author] })
+    @ApiQuery({ name: 'query', example: 'Alex' })
     @Get('/search')
-    search(@Query('query') query: string) {
-        return this.authorService.search(query);
+    async search(@Query('query') query: string): Promise<Author[]> {
+      return this.__authorService__.search(query);
     }
 
-    @ApiOperation({summary: 'get author by id'})
-    @ApiResponse({status: 200, type: Author})
+    @ApiOperation({ summary: 'Get author by id' })
+    @ApiResponse({ type: Author })
     @Get(':id')
-    getById (@Param('id') id: string) {
-        return this.authorService.getBiId(id);
+    async getAuthorById(@Param('id') id: string): Promise<Author> {
+      return this.__authorService__.getAuthorById(id);
     }
 
-    @ApiOperation({summary: 'delete author'})
-    @ApiResponse({status: 200})
+    @ApiOperation({ summary: 'Delete author' })
+    @ApiResponse({ status: 200 })
     @Delete(':id')
-    delete (@Param('id') id: string) {
-        return this.authorService.delete(id);
+    async deleteAuthor(@Param('id') id: string): Promise<ObjectId> {
+      return this.__authorService__.deleteAuthor(id);
     }
 
-    @ApiOperation({summary: 'update author'})
-    @ApiBody({type: UpdateAuthorDto})
-    @ApiResponse({status: 200, type: Author})
+    @ApiOperation({ summary: 'Update author' })
+    @ApiBody({ type: UpdateAuthorDto })
+    @ApiResponse({ status: 200, type: Author })
     @Put(':id')
-    update (@Param('id') id: string, @Body() dto: UpdateAuthorDto) {
-        return this.authorService.update(id, dto);
+    async updateAuthor(
+        @Param('id') id: string,
+        @Body() dto: UpdateAuthorDto,
+    ): Promise<Author> {
+      return this.__authorService__.updateAuthor(id, dto);
     }
 }

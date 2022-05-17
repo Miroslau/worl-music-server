@@ -7,7 +7,8 @@ import {
     Delete,
     UseInterceptors,
     UploadedFiles,
-    Query, HttpCode,
+    Query,
+    HttpCode,
 } from '@nestjs/common';
 
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
@@ -16,7 +17,7 @@ import {
     ApiOperation,
     ApiQuery,
     ApiResponse,
-    ApiTags
+    ApiTags,
 } from '@nestjs/swagger';
 
 import { ObjectId } from 'mongoose';
