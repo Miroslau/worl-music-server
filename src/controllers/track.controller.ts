@@ -7,79 +7,99 @@ import {
     Delete,
     UseInterceptors,
     UploadedFiles,
-    Query,
-    UseGuards
+    Query, HttpCode,
 } from "@nestjs/common";
-import {TrackService} from "../services/track.service";
-import {CreateTrackDto} from "../dto/create-track.dto";
-import {ObjectId} from "mongoose";
-import {CreateCommentDto} from "../dto/create-comment.dto";
-import {FileFieldsInterceptor} from "@nestjs/platform-express";
-import {ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {Track} from "../schemas/track.schema";
-import {Comment} from "../schemas/comment.schema";
+
+import { FileFieldsInterceptor } from "@nestjs/platform-express";
+import {
+    ApiBody,
+    ApiOperation,
+    ApiQuery,
+    ApiResponse,
+    ApiTags
+} from "@nestjs/swagger";
+
+import { ObjectId } from "mongoose";
+
+import { Track } from "../schemas/track.schema";
+import { Comment } from "../schemas/comment.schema";
+
+import { CreateTrackDto } from "../dto/create-track.dto";
+import { CreateCommentDto } from "../dto/create-comment.dto";
+
+import { TrackService } from "../services/track.service";
 
 
 @ApiTags('Track')
 @Controller('/tracks')
 export class TrackController {
 
-    constructor(private trackService: TrackService) {}
+    constructor(private readonly __trackService__: TrackService) {}
 
-    @ApiOperation({summary: 'create track'})
-    @ApiBody({type: Track})
-    @ApiResponse({status: 200, type: Track})
-    @Post('/addTrack')
+    @ApiOperation({ summary: 'Create track' })
+    @ApiBody({ type: Track })
+    @ApiResponse({ status: 200, type: Track })
+    @Post()
+    @HttpCode(200)
     @UseInterceptors(FileFieldsInterceptor([
         { name: 'picture', maxCount: 1 },
         { name: 'audio', maxCount: 1 },
     ]))
-     create(@UploadedFiles() files, @Body() dto: CreateTrackDto) {
-        return this.trackService.create(dto, files);
+    async createTrack(
+        @UploadedFiles() files,
+        @Body() dto: CreateTrackDto,
+    ): Promise<Track> {
+      return this.__trackService__.createTrack(dto, files);
     }
 
-    @ApiOperation({summary: 'get all tracks'})
-    @ApiResponse({status: 200, type: [Track]})
-    @ApiQuery({name: 'count', example: 10})
-    @ApiQuery({name: 'offset', example: 0})
-    @Get('/getAll')
-     getAll(@Query('count') count: number,
-            @Query('offset') offset: number) {
-         return this.trackService.getAll(count, offset);
+    @ApiOperation({ summary: 'Get all tracks' })
+    @ApiResponse({ type: [Track] })
+    @ApiQuery({ name: 'count', example: 10 })
+    @ApiQuery({ name: 'offset', example: 0 })
+    @Get()
+    async getAllTracks(
+      @Query('count') count: number,
+      @Query('offset') offset: number,
+    ): Promise<Track[]> {
+       return this.__trackService__.getAllTracks(count, offset);
     }
 
-    @ApiOperation({summary: 'search track by name'})
-    @ApiQuery({name: 'query', example: 'Tides'})
-    @ApiResponse({status: 200, type: [Track]})
+    @ApiOperation({ summary: 'Search track by name' })
+    @ApiQuery({ name: 'query', example: 'Tides' })
+    @ApiResponse({ type: [Track] })
     @Get('/search')
-    search(@Query('query') query: string) {
-        return this.trackService.search(query);
+    async searchTrack(@Query('query') query: string): Promise<Track[]> {
+      return this.__trackService__.search(query);
     }
 
-    @ApiOperation({summary: 'get track by id'})
-    @ApiResponse({status: 200, type: Track})
+    @ApiOperation({ summary: 'Get track by id' })
+    @ApiResponse({ type: Track })
     @Get(':id')
-     getById(@Param('id') id: string) {
-        return this.trackService.getById(id);
+    async getTrackById(@Param('id') id: string): Promise<Track> {
+      return this.__trackService__.getTrackById(id);
     }
 
-    @ApiOperation({summary: 'delete track'})
-    @ApiResponse({status: 200})
+    @ApiOperation({ summary: 'Delete track' })
+    @ApiResponse({ status: 200 })
     @Delete(':id')
-     delete(@Param('id') id: string) {
-        return this.trackService.delete(id);
+    async deleteTrack(@Param('id') id: string): Promise<ObjectId> {
+      return this.__trackService__.deleteTrack(id);
     }
 
-    @ApiOperation({summary: 'add comment by track'})
-    @ApiBody({type: CreateCommentDto})
-    @ApiResponse({status: 200, type: Comment})
+    @ApiOperation({ summary: 'Add comment by track' })
+    @ApiBody({ type: CreateCommentDto })
+    @ApiResponse({ status: 200, type: Comment })
     @Post('/comment')
-    addComment(@Body() dto: CreateCommentDto) {
-        return this.trackService.addComment(dto);
+    @HttpCode(200)
+    async addComment(@Body() dto: CreateCommentDto): Promise<Comment> {
+      return this.__trackService__.addComment(dto);
     }
 
+    @ApiOperation({ summary: 'Increment property listens in track' })
+    @ApiResponse({ status: 200, type: Track })
     @Post('/listen/:id')
-    listen(@Param('id') id: ObjectId) {
-        return this.trackService.listen(id);
+    @HttpCode(200)
+    async listenTrack(@Param('id') id: string): Promise<Track> {
+      return this.__trackService__.listen(id);
     }
 }
