@@ -1,12 +1,16 @@
-import {forwardRef, Module} from '@nestjs/common';
-import { AuthorService } from '../services/author.service';
-import { AuthorController } from '../controllers/author.controller';
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from "@nestjs/mongoose";
-import { Album, AlbumSchema } from "../schemas/album.schema";
-import {Author, AuthorSchema} from "../schemas/author.schema";
-import {Track, TrackSchema} from "../schemas/track.schema";
-import {AuthModule} from "./auth.module";
-import {RolesModule} from "./roles.module";
+
+import { Album, AlbumSchema } from '../schemas/album.schema';
+import { Author, AuthorSchema } from '../schemas/author.schema';
+import { Track, TrackSchema } from '../schemas/track.schema';
+
+import { AuthorService } from '../services/author.service';
+
+import { AuthorController } from '../controllers/author.controller';
+
+import { AuthModule } from './auth.module';
+import { RolesModule } from './roles.module';
 
 @Module({
   imports: [
@@ -18,8 +22,6 @@ import {RolesModule} from "./roles.module";
   ],
   providers: [AuthorService],
   controllers: [AuthorController],
-  exports: [
-      AuthorService,
-  ]
+  exports: [AuthorService],
 })
 export class AuthorModule {}

@@ -56,8 +56,8 @@ export class RolesController {
     @Put(':id')
     @HttpCode(200)
     updateRole(
-        @Param('id') id: number,
-        @Body() dto: CreateRoleDto,
+      @Param('id') id: number,
+      @Body() dto: CreateRoleDto,
     ) {
       return this.__rolesService__.updateRole(dto, id);
     }

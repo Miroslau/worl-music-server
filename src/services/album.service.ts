@@ -3,17 +3,27 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { Model, ObjectId } from 'mongoose';
 
-import { Album, AlbumDocument } from '../schemas/album.schema';
-import { Author, AuthorDocument } from '../schemas/author.schema';
-import { Track, TrackDocument } from '../schemas/track.schema';
+import { FileType } from '../enums/file-type';
+
+import { Album } from '../schemas/album.schema';
+
+import { AlbumDocument } from '../types';
+
+import { Author } from '../schemas/author.schema';
+
+import { AuthorDocument } from '../types/author-document.type';
+
+import { Track } from '../schemas/track.schema';
+
+import { TrackDocument } from '../types';
 
 import { CreateAlbumDto } from '../dto/create-album.dto';
 import { AddTracksToAlbumDto } from '../dto/create-track.dto';
 import { UpdateAlbumDto } from '../dto/update-album.dto';
 
-import { FileService, FileType } from './file.service';
+import { FileService } from './file.service';
 
-import { getAlbumById, getAllAlbums } from '../agregations/album.aggregation';
+import { getAlbumById, getAllAlbums } from '../aggregations/album.aggregation';
 
 @Injectable()
 export class AlbumService {
@@ -34,7 +44,9 @@ export class AlbumService {
         picture: picturePath,
       });
 
-      author.album.push(album._id);
+      const { _id } = album;
+
+      author.album.push(_id);
 
       await author.save();
 
@@ -76,8 +88,9 @@ export class AlbumService {
     }
 
     async updateAlbum(id: string, dto: UpdateAlbumDto, picture): Promise<Album> {
+      const { author, tracks } = dto;
       const picturePath = this.fileService.createFile(FileType.IMAGE, picture);
-      const authorFromDto = await this.__authorModel__.findById(dto.author);
+      const authorFromDto = await this.__authorModel__.findById(author);
       const currentAlbum = await this.__albumModel__.findById(id);
 
       if (!currentAlbum) {
@@ -97,7 +110,7 @@ export class AlbumService {
         await authorFromAlbum.save();
       }
 
-      if (dto.tracks) {
+      if (tracks) {
         for (const item of currentAlbum.tracks) {
           await this.__trackModel__
                     .findById(item)

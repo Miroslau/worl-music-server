@@ -39,8 +39,8 @@ export class TokensService {
           ...tokens,
         }
 
-        } catch (error) {
-            throw new ForbiddenException();
+      } catch (error) {
+          throw new ForbiddenException();
       }
     }
 

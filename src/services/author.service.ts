@@ -3,14 +3,22 @@ import { InjectModel } from "@nestjs/mongoose";
 
 import { Model, ObjectId } from 'mongoose';
 
-import { Author, AuthorDocument } from '../schemas/author.schema';
-import { Track, TrackDocument } from '../schemas/track.schema';
-import { Album, AlbumDocument } from '../schemas/album.schema';
+import { Author } from '../schemas/author.schema';
+
+import { AuthorDocument } from '../types/author-document.type';
+
+import { Track } from '../schemas/track.schema';
+
+import { TrackDocument } from '../types';
+
+import { Album } from '../schemas/album.schema';
+
+import { AlbumDocument } from '../types';
 
 import { CreatAuthorDto } from '../dto/creat-author.dto';
 import { UpdateAuthorDto } from '../dto/update-author.dto';
 
-import { getAllAuthors, getAuthorById, searchAuthor } from '../agregations/author.aggregation';
+import { getAllAuthors, getAuthorById, searchAuthor } from '../aggregations/author.aggregation';
 
 @Injectable()
 export class AuthorService {

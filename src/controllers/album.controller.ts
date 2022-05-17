@@ -43,7 +43,7 @@ export class AlbumController {
     @Post()
     @HttpCode(200)
     @UseInterceptors(FileFieldsInterceptor([
-        { name: 'picture', maxCount: 1 }
+      { name: 'picture', maxCount: 1 }
     ]))
     async createAlbum(
       @Body() dto: CreateAlbumDto,
@@ -87,7 +87,7 @@ export class AlbumController {
     @Put(':id')
     @HttpCode(200)
     @UseInterceptors(FileFieldsInterceptor([
-        { name: 'picture', maxCount: 1 }
+      { name: 'picture', maxCount: 1 }
     ]))
     async updateAlbum(
       @Param('id') id: string,

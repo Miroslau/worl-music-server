@@ -1,13 +1,13 @@
-import {ObjectId} from "mongoose";
-import {ApiProperty, ApiResponse} from "@nestjs/swagger";
+import { ObjectId } from 'mongoose';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCommentDto {
-    @ApiProperty({example: 'string', description: `username`})
+    @ApiProperty({ example: 'string', description: `username` })
     readonly username: string;
 
-    @ApiProperty({example: 'string', description: 'text'})
+    @ApiProperty({ example: 'string', description: 'text' })
     readonly text: string;
 
-    @ApiProperty({example: 'string', description: 'track'})
+    @ApiProperty({ example: 'string', description: 'track' })
     readonly trackId: ObjectId;
 }

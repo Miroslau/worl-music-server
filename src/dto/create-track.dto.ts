@@ -1,25 +1,25 @@
-import {ApiProperty} from "@nestjs/swagger";
-import {ObjectId} from "mongoose";
+import { ApiProperty } from '@nestjs/swagger';
+import { ObjectId } from 'mongoose';
 
 export class CreateTrackDto {
-    @ApiProperty({example: 'string'})
+    @ApiProperty({ example: 'string' })
     readonly name: string;
 
-    @ApiProperty({example: ['string']})
+    @ApiProperty({ example: ['string' ]})
     readonly artist: [ObjectId];
 
-    @ApiProperty({example: 'string'})
+    @ApiProperty({ example: 'string' })
     readonly text: string;
 
-    @ApiProperty({example: 'string'})
+    @ApiProperty({ example: 'string' })
     readonly albumId: ObjectId;
 }
 
 export class AddTracksToAlbumDto extends CreateTrackDto{
     constructor() {
-        super();
+      super();
     }
 
-    @ApiProperty({example: ['string']})
+    @ApiProperty({ example: ['string'] })
     readonly tracks: [ObjectId]
 }

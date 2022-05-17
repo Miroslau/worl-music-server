@@ -1,4 +1,4 @@
-export interface UserCreationAttrs {
+export interface UserCreationAttr {
     email: string;
     password: string;
 }

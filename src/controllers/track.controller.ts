@@ -43,12 +43,12 @@ export class TrackController {
     @Post()
     @HttpCode(200)
     @UseInterceptors(FileFieldsInterceptor([
-        { name: 'picture', maxCount: 1 },
-        { name: 'audio', maxCount: 1 },
+      { name: 'picture', maxCount: 1 },
+      { name: 'audio', maxCount: 1 },
     ]))
     async createTrack(
-        @UploadedFiles() files,
-        @Body() dto: CreateTrackDto,
+      @UploadedFiles() files,
+      @Body() dto: CreateTrackDto,
     ): Promise<Track> {
       return this.__trackService__.createTrack(dto, files);
     }

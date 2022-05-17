@@ -3,17 +3,30 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 
-import { Track, TrackDocument } from '../schemas/track.schema';
-import { Comment, CommentDocument } from '../schemas/comment.schema';
-import { Author, AuthorDocument } from '../schemas/author.schema';
-import { Album, AlbumDocument } from '../schemas/album.schema';
+import { FileType } from '../enums/file-type';
+
+import { Track } from '../schemas/track.schema';
+
+import { TrackDocument } from '../types';
+
+import { Comment } from '../schemas/comment.schema';
+
+import { CommentDocument } from '../types';
+
+import { Author } from '../schemas/author.schema';
+
+import { AuthorDocument } from '../types/author-document.type';
+
+import { Album } from '../schemas/album.schema';
+
+import { AlbumDocument } from '../types';
 
 import { CreateTrackDto } from '../dto/create-track.dto';
 import { CreateCommentDto } from '../dto/create-comment.dto';
 
-import { FileService, FileType } from './file.service';
+import { FileService } from './file.service';
 
-import { getAllTracks, getTrackById, searchTrack } from '../agregations/tracks.aggregation';
+import { getAllTracks, getTrackById, searchTrack } from '../aggregations/tracks.aggregation';
 
 
 @Injectable()
