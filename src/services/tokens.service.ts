@@ -1,70 +1,77 @@
-import {ForbiddenException, Injectable} from "@nestjs/common";
-import {UserService} from "./user.service";
-import {JwtService} from "@nestjs/jwt";
-import {AuthResponseDto} from "../dto/auth-response.dto";
-import {User} from "../model/users.model";
-import {nanoid} from "nanoid";
+import { ForbiddenException, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+
+import { nanoid } from 'nanoid';
+
+import { User } from '../model/users.model';
+
+import { AuthResponseDto } from '../dto/auth-response.dto';
+
+import { UserService } from './user.service';
 
 
 @Injectable()
 export class TokensService {
-    constructor(private readonly userService: UserService,
-                private jwtService: JwtService) {}
+    constructor(
+      private readonly __userService__: UserService,
+      private readonly __jwtService__: JwtService,
+    ) {}
 
     async refreshTokens(refreshToken: string): Promise<AuthResponseDto> {
-        try {
-            const verifiedToken = this.jwtService.verify(refreshToken, {
-                secret: 'test-app-refResh-token-secret'
-            });
+      try {
+        const verifiedToken = this.__jwtService__.verify(refreshToken, {
+          secret: 'test-app-refResh-token-secret',
+        });
 
-            const { userId, refreshTokenId } = verifiedToken;
+        const { userId } = verifiedToken;
+        const user = await this.__userService__.getById(userId);
+        const now = new Date();
 
-            const user = await this.userService.getById(userId);
+        if (!user || user.tokenId !== refreshToken || now > user.tokenExpire) {
+          throw new ForbiddenException('Token is expired');
+        }
 
-            const now = new Date();
+        const tokens = await this.getTokens(user)
 
-            if (!user || user.tokenId !== refreshToken || now > user.tokenExpire) {
-                throw new ForbiddenException('Token is expired');
-            }
-
-            const tokens = await this.getTokens(user)
-
-            return {
-                id: user.id,
-                email: user.email,
-                ...tokens,
-            }
+        return {
+          id: user.id,
+          email: user.email,
+          ...tokens,
+        }
 
         } catch (error) {
             throw new ForbiddenException();
-        }
+      }
     }
 
     async getTokens(user: User) {
-        const accessToken = this.jwtService.sign(
-            {email: user.email, id: user.id, roles: user.roles},
-            {secret: 'test-app-access-token-secret', expiresIn: 1000 * 60 * 15},
-        );
+      const accessToken = this.__jwtService__.sign(
+        { email: user.email, id: user.id, roles: user.roles },
+        { secret: 'test-app-access-token-secret', expiresIn: 1000 * 60 * 15 },
+      );
 
-        const refreshTokenId = nanoid();
+      const refreshTokenId = nanoid();
 
-        const expire = 1000 * 60 * 24 * 15;
+      const expire = 1000 * 60 * 24 * 15;
 
-        const refreshToken = this.jwtService.sign(
-            {email: user.email, id: user.id, roles: user.roles, refreshTokenId},
-            {
-                secret: 'test-app-refResh-token-secret',
-                expiresIn: expire,
-            },
-        );
+      const refreshToken = this.__jwtService__.sign(
+        { email: user.email, id: user.id, roles: user.roles, refreshTokenId },
+        {
+          secret: 'test-app-refResh-token-secret',
+          expiresIn: expire,
+        },
+      );
 
-        user.tokenId = refreshTokenId;
-        const expiration = new Date();
-        expiration.setTime(expiration.getTime() + expire);
-        user.tokenExpire = expiration;
+      user.tokenId = refreshTokenId;
 
-        await this.userService.updateUser(user, user.id);
+      const expiration = new Date();
 
-        return { accessToken, refreshToken };
+      expiration.setTime(expiration.getTime() + expire);
+
+      user.tokenExpire = expiration;
+
+      await this.__userService__.updateUser(user, user.id);
+
+      return { accessToken, refreshToken };
     }
 }
