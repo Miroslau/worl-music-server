@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
 
 import * as bcrypt from 'bcryptjs';
 
@@ -15,14 +14,13 @@ import { UserService } from './user.service';
 export class AuthService {
 
     constructor(
-      @InjectModel(User) private userRepository: typeof User,
-      private userService: UserService,
-      private tokenService: TokensService,
+      private readonly __userService__: UserService,
+      private readonly __tokenService__: TokensService,
     ) {}
 
     async signIn(dto: CreateUserDto): Promise<AuthResponseDto> {
       const user = await this.validateUser(dto);
-      const tokens = await this.tokenService.getTokens(user);
+      const tokens = await this.__tokenService__.getTokens(user);
 
       return {
         id: user.id,
@@ -32,15 +30,15 @@ export class AuthService {
     }
 
     async signUp(dto: CreateUserDto): Promise<AuthResponseDto> {
-      const candidate = await this.userService.getByEmail(dto.email);
+      const candidate = await this.__userService__.getByEmail(dto.email);
 
       if (candidate) {
         throw new HttpException('An user with such a mail already exist', HttpStatus.BAD_REQUEST);
       }
 
       const hashPassword: string = await bcrypt.hash(dto.password, 5);
-      const user: User = await this.userService.create({...dto, password: hashPassword});
-      const tokens = await this.tokenService.getTokens(user);
+      const user: User = await this.__userService__.createUser({ ...dto, password: hashPassword });
+      const tokens = await this.__tokenService__.getTokens(user);
 
       return {
         id: user.id,
@@ -50,7 +48,7 @@ export class AuthService {
     }
 
     async verifyPayload(payload: any): Promise<User> {
-      const user = await this.userService.getByEmail(payload.email);
+      const user = await this.__userService__.getByEmail(payload.email);
 
       if (!user) {
         throw new UnauthorizedException();
@@ -60,13 +58,13 @@ export class AuthService {
     }
 
     private async validateUser(dto: CreateUserDto): Promise<User> {
-      const user = await this.userService.getByEmail(dto.email);
+      const user = await this.__userService__.getByEmail(dto.email);
       const passwordEquals: string = await bcrypt.compare(dto.password, user.password);
 
       if (user && passwordEquals) {
         return user;
       }
 
-      throw new UnauthorizedException({message: 'Incorrect email of password'});
+      throw new UnauthorizedException({ message: 'Incorrect email of password' });
     }
 }

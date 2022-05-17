@@ -63,7 +63,7 @@ export class TokensService {
         expiration.setTime(expiration.getTime() + expire);
         user.tokenExpire = expiration;
 
-        await this.userService.update(user, user.id);
+        await this.userService.updateUser(user, user.id);
 
         return { accessToken, refreshToken };
     }
