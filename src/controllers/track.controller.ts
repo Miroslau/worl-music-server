@@ -61,7 +61,7 @@ export class TrackController {
       @Query('count') count: number,
       @Query('offset') offset: number,
     ): Promise<Track[]> {
-       return this.__trackService__.getAllTracks(count, offset);
+      return this.__trackService__.getAllTracks(count, offset);
     }
 
     @ApiOperation({ summary: 'Search track by name' })

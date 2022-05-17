@@ -6,7 +6,7 @@ import {UpdateAuthorDto} from '../dto/update-author.dto';
 import {Author} from "../schemas/author.schema";
 
 @ApiTags('Author')
-@Controller('/author')
+@Controller('/authors')
 export class AuthorController {
 
     constructor(private authorService: AuthorService) {}
