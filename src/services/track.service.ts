@@ -1,30 +1,30 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
-import { InjectModel } from "@nestjs/mongoose";
-import { Model, ObjectId } from "mongoose";
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, ObjectId } from 'mongoose';
 
-import { Track, TrackDocument } from "../schemas/track.schema";
-import { Comment, CommentDocument } from "../schemas/comment.schema";
-import { Author, AuthorDocument } from "../schemas/author.schema";
-import { Album, AlbumDocument } from "../schemas/album.schema";
+import { Track, TrackDocument } from '../schemas/track.schema';
+import { Comment, CommentDocument } from '../schemas/comment.schema';
+import { Author, AuthorDocument } from '../schemas/author.schema';
+import { Album, AlbumDocument } from '../schemas/album.schema';
 
-import { CreateTrackDto } from "../dto/create-track.dto";
-import { CreateCommentDto } from "../dto/create-comment.dto";
+import { CreateTrackDto } from '../dto/create-track.dto';
+import { CreateCommentDto } from '../dto/create-comment.dto';
 
-import { FileService, FileType } from "./file.service";
+import { FileService, FileType } from './file.service';
 
-import { getAllTracks, getTrackById, searchTrack } from "../agregations/tracks.aggregation";
+import { getAllTracks, getTrackById, searchTrack } from '../agregations/tracks.aggregation';
 
 
 @Injectable()
 export class TrackService {
 
     constructor(
-      @InjectModel(Track.name) private trackModel: Model<TrackDocument>,
-      @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
-      @InjectModel(Author.name) private authorModel: Model<AuthorDocument>,
-      @InjectModel(Album.name) private albumModel: Model<AlbumDocument>,
-      private fileService: FileService,
+      @InjectModel(Track.name) private readonly __trackModel__: Model<TrackDocument>,
+      @InjectModel(Comment.name) private readonly __commentModel__: Model<CommentDocument>,
+      @InjectModel(Author.name) private readonly __authorModel__: Model<AuthorDocument>,
+      @InjectModel(Album.name) private readonly __albumModel__: Model<AlbumDocument>,
+      private readonly fileService: FileService,
     ) {}
 
     async createTrack(dto: CreateTrackDto, files): Promise<Track> {
@@ -43,7 +43,7 @@ export class TrackService {
       const { picture, audio } = files;
       const audioPath = this.fileService.createFile(FileType.AUDIO, audio[0]);
       const picturePath = this.fileService.createFile(FileType.IMAGE, picture[0]);
-      const track = await this.trackModel.create({
+      const track = await this.__trackModel__.create({
         ...dto,
         listens: 0,
         audio: audioPath,
@@ -51,7 +51,7 @@ export class TrackService {
       });
 
       for (const authorId of dto.artist) {
-        const author = await this.authorModel.findById(authorId);
+        const author = await this.__authorModel__.findById(authorId);
 
         author.tracks.push(track._id);
 
@@ -62,23 +62,23 @@ export class TrackService {
     }
 
     async getAllTracks(count = 10, offset = 0): Promise<Track[]> {
-      return this.trackModel
+      return this.__trackModel__
                  .aggregate(getAllTracks())
                  .skip(Number(offset))
                  .limit(Number(count));
     }
 
     async getTrackById(id: string): Promise<Track> {
-      const track: Track[] = await this.trackModel.aggregate(getTrackById(id));
+      const track: Track[] = await this.__trackModel__.aggregate(getTrackById(id));
 
       return track[0];
     }
 
     async deleteTrack(id: string): Promise<ObjectId> {
-      const track = await this.trackModel.findByIdAndDelete(id);
+      const track = await this.__trackModel__.findByIdAndDelete(id);
 
       if (track.album) {
-        const album = await this.albumModel.findById(track.album);
+        const album = await this.__authorModel__.findById(track.album);
         const trackIndex: number = album.tracks.indexOf(track._id);
 
         if (trackIndex !== -1) {
@@ -89,7 +89,7 @@ export class TrackService {
       }
 
       for (const authorId of track.artist) {
-        const author = await this.authorModel.findById(authorId);
+        const author = await this.__authorModel__.findById(authorId);
         const trackIndex = author.tracks.indexOf(track._id);
 
         if (trackIndex !== -1) {
@@ -103,8 +103,8 @@ export class TrackService {
     }
 
     async addComment(dto: CreateCommentDto): Promise<Comment> {
-      const track = await this.trackModel.findById(dto.trackId);
-      const comment = await this.commentModel.create({...dto});
+      const track = await this.__trackModel__.findById(dto.trackId);
+      const comment = await this.__commentModel__.create({...dto});
 
       track.comments.push(comment._id);
 
@@ -114,7 +114,7 @@ export class TrackService {
     }
 
     async listen(id: string): Promise<Track> {
-      const track = await this.trackModel.findById(id);
+      const track = await this.__trackModel__.findById(id);
 
       track.listens +=1;
       track.save();
@@ -123,6 +123,6 @@ export class TrackService {
     }
 
     async search(query: string): Promise<Track[]> {
-      return this.trackModel.aggregate(searchTrack(query));
+      return this.__trackModel__.aggregate(searchTrack(query));
     }
 }

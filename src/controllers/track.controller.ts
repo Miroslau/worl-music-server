@@ -8,26 +8,26 @@ import {
     UseInterceptors,
     UploadedFiles,
     Query, HttpCode,
-} from "@nestjs/common";
+} from '@nestjs/common';
 
-import { FileFieldsInterceptor } from "@nestjs/platform-express";
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import {
     ApiBody,
     ApiOperation,
     ApiQuery,
     ApiResponse,
     ApiTags
-} from "@nestjs/swagger";
+} from '@nestjs/swagger';
 
-import { ObjectId } from "mongoose";
+import { ObjectId } from 'mongoose';
 
-import { Track } from "../schemas/track.schema";
-import { Comment } from "../schemas/comment.schema";
+import { Track } from '../schemas/track.schema';
+import { Comment } from '../schemas/comment.schema';
 
-import { CreateTrackDto } from "../dto/create-track.dto";
-import { CreateCommentDto } from "../dto/create-comment.dto";
+import { CreateTrackDto } from '../dto/create-track.dto';
+import { CreateCommentDto } from '../dto/create-comment.dto';
 
-import { TrackService } from "../services/track.service";
+import { TrackService } from '../services/track.service';
 
 
 @ApiTags('Track')
