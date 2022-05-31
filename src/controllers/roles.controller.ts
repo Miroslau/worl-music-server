@@ -21,7 +21,6 @@ import { CreateRoleDto } from '../dto/create-role.dto';
 
 import { RolesService } from '../services/roles.service';
 
-
 @ApiTags('Role')
 @Controller('/roles')
 export class RolesController {

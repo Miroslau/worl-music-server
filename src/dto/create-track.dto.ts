@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+
 import { ObjectId } from 'mongoose';
 
 export class CreateTrackDto {
@@ -15,11 +16,11 @@ export class CreateTrackDto {
     readonly albumId: ObjectId;
 }
 
-export class AddTracksToAlbumDto extends CreateTrackDto{
+export class AddTracksToAlbumDto extends CreateTrackDto {
     constructor() {
       super();
     }
 
     @ApiProperty({ example: ['string'] })
-    readonly tracks: [ObjectId]
+    readonly tracks: [ObjectId];
 }

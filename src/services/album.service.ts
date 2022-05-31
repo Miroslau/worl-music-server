@@ -6,15 +6,11 @@ import { Model, ObjectId } from 'mongoose';
 import { FileType } from '../enums/file-type';
 
 import { Album } from '../schemas/album.schema';
-
-import { AlbumDocument } from '../types';
-
+import { Track } from '../schemas/track.schema';
 import { Author } from '../schemas/author.schema';
 
+import { AlbumDocument } from '../types';
 import { AuthorDocument } from '../types/author-document.type';
-
-import { Track } from '../schemas/track.schema';
-
 import { TrackDocument } from '../types';
 
 import { CreateAlbumDto } from '../dto/create-album.dto';
@@ -84,6 +80,7 @@ export class AlbumService {
 
     async getAlbumById(id: string): Promise<Album> {
       const album: Album[] = await this.__albumModel__.aggregate(getAlbumById(id));
+
       return album[0];
     }
 

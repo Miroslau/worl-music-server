@@ -25,7 +25,6 @@ import { UserService } from '../services/user.service';
 import { ValidationPipe } from '../pipes/validation.pipe';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
-
 @ApiTags('User')
 @Controller('/users')
 export class UserController {

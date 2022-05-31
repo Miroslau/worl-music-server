@@ -26,7 +26,6 @@ import { Author } from '../schemas/author.schema';
 
 import { AuthorService } from '../services/author.service';
 
-
 @ApiTags('Author')
 @Controller('/authors')
 export class AuthorController {

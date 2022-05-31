@@ -7,7 +7,6 @@ import { Track } from './track.schema';
 
 @Schema()
 export class Comment {
-
     @ApiProperty({ example: 'string', description: `username` })
     @Prop()
     username: string;

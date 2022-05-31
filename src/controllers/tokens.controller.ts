@@ -10,6 +10,7 @@ import { SWAGGER_ENDPOINT_DESCRIPTION } from '../constants/swagger.samples.const
 @ApiTags('Tokens')
 @Controller('/tokens')
 export class TokensController {
+
     constructor(private readonly tokensService: TokensService) {}
 
     @ApiOperation({ summary: SWAGGER_ENDPOINT_DESCRIPTION.TOKENS_REFRESH })

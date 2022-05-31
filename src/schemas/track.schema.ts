@@ -1,11 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 import * as mongoose from 'mongoose';
 
-import { Comment } from "./comment.schema";
-import { Album } from "./album.schema";
-import { Author } from "./author.schema";
+import { Comment } from './comment.schema';
+import { Album } from './album.schema';
+import { Author } from './author.schema';
 
 @Schema()
 export class Track {

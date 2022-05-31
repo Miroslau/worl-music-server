@@ -10,6 +10,7 @@ import {
     UploadedFiles,
     UseInterceptors,
 } from '@nestjs/common';
+
 import {
     ApiBody,
     ApiOperation,
@@ -29,7 +30,6 @@ import { AddTracksToAlbumDto } from '../dto/create-track.dto';
 
 import { AlbumService } from '../services/album.service';
 import { UpdateAlbumDto } from '../dto/update-album.dto';
-
 
 @ApiTags('Album')
 @Controller('/albums')
@@ -53,7 +53,7 @@ export class AlbumController {
       return this.__albumService__.createAlbum(dto, picture[0]);
     }
 
-    @ApiOperation({ summary: `Add tracks to album` })
+    @ApiOperation({ summary: 'Add tracks to album' })
     @ApiBody({ type: AddTracksToAlbumDto })
     @ApiResponse({ status: 200, type: Album })
     @Post('/addTrackToAlbum')
@@ -62,7 +62,7 @@ export class AlbumController {
       return this.__albumService__.addTrackToAlbum(dto);
     }
 
-    @ApiOperation({ summary: `Get all albums` })
+    @ApiOperation({ summary: 'Get all albums' })
     @ApiResponse({ type: [Album] })
     @ApiQuery({ name: 'count', example: 4 })
     @ApiQuery({ name: 'offset', example: 0 })

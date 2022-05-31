@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { SWAGGER_SAMPLES_CONSTANTS } from '../constants/swagger.samples.constants';
 
+import { SWAGGER_SAMPLES_CONSTANTS } from '../constants/swagger.samples.constants';
 
 export class AuthResponseDto {
     @ApiProperty({ example: SWAGGER_SAMPLES_CONSTANTS.USER_ID_SAMPLE })

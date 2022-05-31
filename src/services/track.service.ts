@@ -6,19 +6,13 @@ import { Model, ObjectId } from 'mongoose';
 import { FileType } from '../enums/file-type';
 
 import { Track } from '../schemas/track.schema';
-
-import { TrackDocument } from '../types';
-
 import { Comment } from '../schemas/comment.schema';
-
-import { CommentDocument } from '../types';
-
 import { Author } from '../schemas/author.schema';
-
-import { AuthorDocument } from '../types/author-document.type';
-
 import { Album } from '../schemas/album.schema';
 
+import { TrackDocument } from '../types';
+import { CommentDocument } from '../types';
+import { AuthorDocument } from '../types/author-document.type';
 import { AlbumDocument } from '../types';
 
 import { CreateTrackDto } from '../dto/create-track.dto';
@@ -28,7 +22,6 @@ import { FileService } from './file.service';
 
 import { getAllTracks, getTrackById, searchTrack } from '../aggregations/tracks.aggregation';
 
-
 @Injectable()
 export class TrackService {
 
@@ -37,7 +30,7 @@ export class TrackService {
       @InjectModel(Comment.name) private readonly __commentModel__: Model<CommentDocument>,
       @InjectModel(Author.name) private readonly __authorModel__: Model<AuthorDocument>,
       @InjectModel(Album.name) private readonly __albumModel__: Model<AlbumDocument>,
-      private readonly fileService: FileService,
+      private readonly __fileService__: FileService,
     ) {}
 
     async createTrack(dto: CreateTrackDto, files): Promise<Track> {
@@ -54,8 +47,8 @@ export class TrackService {
       }
 
       const { picture, audio } = files;
-      const audioPath = this.fileService.createFile(FileType.AUDIO, audio[0]);
-      const picturePath = this.fileService.createFile(FileType.IMAGE, picture[0]);
+      const audioPath = this.__fileService__.createFile(FileType.AUDIO, audio[0]);
+      const picturePath = this.__fileService__.createFile(FileType.IMAGE, picture[0]);
       const track = await this.__trackModel__.create({
         ...dto,
         listens: 0,

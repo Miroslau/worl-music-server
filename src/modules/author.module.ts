@@ -1,5 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { MongooseModule } from "@nestjs/mongoose";
+import { MongooseModule } from '@nestjs/mongoose';
 
 import { Album, AlbumSchema } from '../schemas/album.schema';
 import { Author, AuthorSchema } from '../schemas/author.schema';

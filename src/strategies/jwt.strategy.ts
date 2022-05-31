@@ -1,11 +1,15 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { AuthService } from '../services/auth.service';
 import { Injectable } from '@nestjs/common';
+
+import { ExtractJwt, Strategy } from 'passport-jwt';
+
+import { AuthService } from '../services/auth.service';
+
 import { User } from '../model/users.model';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+
     constructor(
       private readonly authService: AuthService,
     ) {
@@ -16,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       });
     }
 
-    validate (payload: any): Promise<User> {
+    validate(payload: any): Promise<User> {
       return this.authService.verifyPayload(payload);
     }
 }
