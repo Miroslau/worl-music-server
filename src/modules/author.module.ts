@@ -1,9 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { Album, AlbumSchema } from '../schemas/album.schema';
-import { Author, AuthorSchema } from '../schemas/author.schema';
-import { Track, TrackSchema } from '../schemas/track.schema';
+import { Album, Author, Track, AlbumSchema, AuthorSchema, TrackSchema } from '../schemas';
 
 import { AuthorService } from '../services/author.service';
 

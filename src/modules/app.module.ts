@@ -3,9 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { SequelizeModule } from '@nestjs/sequelize';
 
-import { User } from '../model/users.model';
-import { UserRoles } from '../model/user-roles.model';
-import { Role } from '../model/roles.model';
+import { User, UserRoles, Role } from '../model';
 
 import * as path from 'path';
 

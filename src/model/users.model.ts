@@ -2,10 +2,9 @@ import { BelongsToMany, Column, DataType, Model, Table } from 'sequelize-typescr
 
 import { ApiProperty } from '@nestjs/swagger';
 
-import { UserCreationAttr } from '../interfaces/user-creation-attr';
+import { UserCreationAttr } from '../interfaces';
 
-import { Role } from './roles.model';
-import { UserRoles } from './user-roles.model';
+import { Role, UserRoles } from './index';
 
 @Table({ tableName: 'users' })
 export class User extends Model<User, UserCreationAttr> {

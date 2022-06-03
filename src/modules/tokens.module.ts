@@ -4,6 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { TokensService } from '../services/tokens.service';
+
 import { TokensController } from '../controllers/tokens.controller';
 
 import { UserModule } from './user.module';

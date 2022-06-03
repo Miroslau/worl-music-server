@@ -1,9 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 
-import { UserRoles } from '../model/user-roles.model';
-import { User } from '../model/users.model';
-import { Role } from '../model/roles.model';
+import { UserRoles, User, Role } from '../model';
 
 import { JwtStrategy } from '../strategies/jwt.strategy';
 

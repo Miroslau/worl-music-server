@@ -1,10 +1,16 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { Track, TrackSchema } from '../schemas/track.schema';
-import { Comment, CommentSchema } from '../schemas/comment.schema';
-import { Author, AuthorSchema } from '../schemas/author.schema';
-import { Album, AlbumSchema } from '../schemas/album.schema';
+import {
+    Track,
+    Comment,
+    Author,
+    Album,
+    TrackSchema,
+    CommentSchema,
+    AuthorSchema,
+    AlbumSchema,
+} from '../schemas';
 
 import { TracksController } from '../controllers/track.controller';
 

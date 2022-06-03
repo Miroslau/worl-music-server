@@ -16,15 +16,14 @@ import { ROLES_KEY } from '../decorators/roles-auth.decorator';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-
     constructor(
-      private readonly __jwtService__: JwtService,
-      private readonly __reflector__: Reflector,
+      private readonly _jwtService: JwtService,
+      private readonly _reflector: Reflector,
     ) {}
 
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
       try {
-        const requiredRoles = this.__reflector__.getAllAndOverride(
+        const requiredRoles = this._reflector.getAllAndOverride(
           ROLES_KEY, [
             context.getHandler(),
             context.getClass(),
@@ -40,10 +39,10 @@ export class RolesGuard implements CanActivate {
         const token = authHeader.split(' ')[1];
 
         if (bearer !== 'Bearer' || !token) {
-          throw new UnauthorizedException({ message: 'The user is not logged in'})
+          throw new UnauthorizedException({ message: 'The user is not logged in'});
         }
 
-        const user = this.__jwtService__.verify(token);
+        const user = this._jwtService.verify(token);
 
         request.user = user;
 
@@ -53,5 +52,4 @@ export class RolesGuard implements CanActivate {
             throw new HttpException('Not access', HttpStatus.FORBIDDEN);
       }
     }
-
 }
