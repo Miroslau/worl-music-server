@@ -23,19 +23,16 @@ import {
 
 import { ObjectId } from 'mongoose';
 
-import { Track } from '../schemas/track.schema';
-import { Comment } from '../schemas/comment.schema';
+import { Track, Comment } from '../schemas';
 
-import { CreateTrackDto } from '../dto/create-track.dto';
-import { CreateCommentDto } from '../dto/create-comment.dto';
+import { CreateTrackDto, CreateCommentDto } from '../dto';
 
 import { TrackService } from '../services/track.service';
 
 @ApiTags('Track')
 @Controller('/tracks')
-export class TrackController {
-
-    constructor(private readonly __trackService__: TrackService) {}
+export class TracksController {
+    constructor(private readonly _trackService: TrackService) {}
 
     @ApiOperation({ summary: 'Create track' })
     @ApiBody({ type: Track })
@@ -50,7 +47,7 @@ export class TrackController {
       @UploadedFiles() files,
       @Body() dto: CreateTrackDto,
     ): Promise<Track> {
-      return this.__trackService__.createTrack(dto, files);
+      return this._trackService.createTrack(dto, files);
     }
 
     @ApiOperation({ summary: 'Get all tracks' })
@@ -62,7 +59,7 @@ export class TrackController {
       @Query('count') count: number,
       @Query('offset') offset: number,
     ): Promise<Track[]> {
-      return this.__trackService__.getAllTracks(count, offset);
+      return this._trackService.getAllTracks(count, offset);
     }
 
     @ApiOperation({ summary: 'Search track by name' })
@@ -70,21 +67,21 @@ export class TrackController {
     @ApiResponse({ type: [Track] })
     @Get('/search')
     async searchTrack(@Query('query') query: string): Promise<Track[]> {
-      return this.__trackService__.search(query);
+      return this._trackService.search(query);
     }
 
     @ApiOperation({ summary: 'Get track by id' })
     @ApiResponse({ type: Track })
     @Get(':id')
     async getTrackById(@Param('id') id: string): Promise<Track> {
-      return this.__trackService__.getTrackById(id);
+      return this._trackService.getTrackById(id);
     }
 
     @ApiOperation({ summary: 'Delete track' })
     @ApiResponse({ status: 200 })
     @Delete(':id')
     async deleteTrack(@Param('id') id: string): Promise<ObjectId> {
-      return this.__trackService__.deleteTrack(id);
+      return this._trackService.deleteTrack(id);
     }
 
     @ApiOperation({ summary: 'Add comment by track' })
@@ -93,7 +90,7 @@ export class TrackController {
     @Post('/comment')
     @HttpCode(200)
     async addComment(@Body() dto: CreateCommentDto): Promise<Comment> {
-      return this.__trackService__.addComment(dto);
+      return this._trackService.addComment(dto);
     }
 
     @ApiOperation({ summary: 'Increment property listens in track' })
@@ -101,6 +98,6 @@ export class TrackController {
     @Post('/listen/:id')
     @HttpCode(200)
     async listenTrack(@Param('id') id: string): Promise<Track> {
-      return this.__trackService__.listen(id);
+      return this._trackService.listen(id);
     }
 }

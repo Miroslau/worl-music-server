@@ -5,7 +5,7 @@ import { Album, AlbumSchema } from '../schemas/album.schema';
 import { Author, AuthorSchema } from '../schemas/author.schema';
 import { Track, TrackSchema } from '../schemas/track.schema';
 
-import { AlbumController } from '../controllers/album.controller';
+import { AlbumsController } from '../controllers/album.controller';
 
 import { AlbumService } from '../services/album.service';
 import { FileService } from '../services/file.service';
@@ -20,6 +20,6 @@ import { AuthModule } from './auth.module';
       AuthModule,
     ],
     providers: [AlbumService, FileService],
-    controllers: [AlbumController],
+    controllers: [AlbumsController],
 })
 export class AlbumModule {}

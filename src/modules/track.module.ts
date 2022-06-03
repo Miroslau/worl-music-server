@@ -6,7 +6,7 @@ import { Comment, CommentSchema } from '../schemas/comment.schema';
 import { Author, AuthorSchema } from '../schemas/author.schema';
 import { Album, AlbumSchema } from '../schemas/album.schema';
 
-import { TrackController } from '../controllers/track.controller';
+import { TracksController } from '../controllers/track.controller';
 
 import { TrackService } from '../services/track.service';
 import { FileService } from '../services/file.service';
@@ -21,7 +21,7 @@ import { AuthModule } from './auth.module';
       MongooseModule.forFeature([{name: Album.name, schema: AlbumSchema}]),
       forwardRef(() => AuthModule),
     ],
-    controllers: [TrackController],
+    controllers: [TracksController],
     providers: [TrackService, FileService],
     exports: [TrackService],
 })

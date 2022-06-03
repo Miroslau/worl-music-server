@@ -23,19 +23,16 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 import { ObjectId } from 'mongoose';
 
-import { Album } from '../schemas/album.schema';
+import { Album } from '../schemas';
 
-import { CreateAlbumDto } from '../dto/create-album.dto';
-import { AddTracksToAlbumDto } from '../dto/create-track.dto';
+import { CreateAlbumDto, AddTracksToAlbumDto, UpdateAlbumDto } from '../dto';
 
 import { AlbumService } from '../services/album.service';
-import { UpdateAlbumDto } from '../dto/update-album.dto';
 
 @ApiTags('Album')
 @Controller('/albums')
-export class AlbumController {
-
-    constructor(private readonly __albumService__: AlbumService) {}
+export class AlbumsController {
+    constructor(private readonly _albumService: AlbumService) {}
 
     @ApiOperation({ summary: 'Create album' })
     @ApiBody({ type: CreateAlbumDto })
@@ -50,7 +47,7 @@ export class AlbumController {
       @UploadedFiles() files,
     ): Promise<Album> {
       const { picture } = files;
-      return this.__albumService__.createAlbum(dto, picture[0]);
+      return this._albumService.createAlbum(dto, picture[0]);
     }
 
     @ApiOperation({ summary: 'Add tracks to album' })
@@ -59,7 +56,7 @@ export class AlbumController {
     @Post('/addTrackToAlbum')
     @HttpCode(200)
     async addTrackToAlbum(@Body() dto: AddTracksToAlbumDto): Promise<Album> {
-      return this.__albumService__.addTrackToAlbum(dto);
+      return this._albumService.addTrackToAlbum(dto);
     }
 
     @ApiOperation({ summary: 'Get all albums' })
@@ -71,14 +68,14 @@ export class AlbumController {
       @Query('count') count: number,
       @Query('offset') offset: number,
     ): Promise<Album[]> {
-      return this.__albumService__.getAllAlbums(count, offset);
+      return this._albumService.getAllAlbums(count, offset);
     }
 
     @ApiOperation({ summary: 'Get album by id' })
     @ApiResponse({ type: Album })
     @Get(':id')
     async getAlbumById(@Param('id') id: string): Promise<Album> {
-      return this.__albumService__.getAlbumById(id);
+      return this._albumService.getAlbumById(id);
     }
 
     @ApiOperation({ summary: 'Update album' })
@@ -95,13 +92,13 @@ export class AlbumController {
       @UploadedFiles() files,
     ): Promise<Album> {
       const { picture } = files;
-      return this.__albumService__.updateAlbum(id, dto, picture[0]);
+      return this._albumService.updateAlbum(id, dto, picture[0]);
     }
 
-    @ApiOperation({summary: 'delete album'})
-    @ApiResponse({status: 200})
+    @ApiOperation({ summary: 'delete album' })
+    @ApiResponse({ status: 200 })
     @Delete(':id')
     async deleteAlbum(@Param('id') id: string): Promise<ObjectId> {
-      return this.__albumService__.deleteAlbum(id);
+      return this._albumService.deleteAlbum(id);
     }
 }

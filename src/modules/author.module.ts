@@ -7,7 +7,7 @@ import { Track, TrackSchema } from '../schemas/track.schema';
 
 import { AuthorService } from '../services/author.service';
 
-import { AuthorController } from '../controllers/author.controller';
+import { AuthorsController } from '../controllers/author.controller';
 
 import { AuthModule } from './auth.module';
 import { RolesModule } from './roles.module';
@@ -21,7 +21,7 @@ import { RolesModule } from './roles.module';
     forwardRef(() => AuthModule),
   ],
   providers: [AuthorService],
-  controllers: [AuthorController],
+  controllers: [AuthorsController],
   exports: [AuthorService],
 })
 export class AuthorModule {}

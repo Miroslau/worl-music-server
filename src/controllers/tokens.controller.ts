@@ -1,7 +1,7 @@
 import { Controller, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AuthResponseDto } from '../dto/auth-response.dto';
+import { AuthResponseDto } from '../dto';
 
 import { TokensService } from '../services/tokens.service';
 
@@ -10,8 +10,7 @@ import { SWAGGER_ENDPOINT_DESCRIPTION } from '../constants/swagger.samples.const
 @ApiTags('Tokens')
 @Controller('/tokens')
 export class TokensController {
-
-    constructor(private readonly tokensService: TokensService) {}
+    constructor(private readonly _tokensService: TokensService) {}
 
     @ApiOperation({ summary: SWAGGER_ENDPOINT_DESCRIPTION.TOKENS_REFRESH })
     @ApiResponse({ status: HttpStatus.OK, type: AuthResponseDto })
@@ -19,7 +18,7 @@ export class TokensController {
     @Post('/refresh')
     public async refreshTokens(@Req() req, @Res() res) {
       const { refreshToken } = req.cookies;
-      const userData = await this.tokensService.refreshTokens(refreshToken);
+      const userData = await this._tokensService.refreshTokens(refreshToken);
       const refreshedToken = userData.refreshToken;
 
       delete userData.refreshToken;

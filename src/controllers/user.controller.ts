@@ -16,9 +16,7 @@ import {
 
 import { User } from '../model/users.model';
 
-import { CreateUserDto } from '../dto/create-user.dto';
-import { AddRoleDto } from '../dto/add-role.dto';
-import { BanUserDto } from '../dto/ban-user.dto';
+import { CreateUserDto, AddRoleDto, BanUserDto } from '../dto';
 
 import { UserService } from '../services/user.service';
 
@@ -28,8 +26,7 @@ import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 @ApiTags('User')
 @Controller('/users')
 export class UserController {
-
-    constructor(private readonly __userService__: UserService) {}
+    constructor(private readonly _userService: UserService) {}
 
     @ApiOperation({ summary: 'Create user' })
     @ApiResponse({ status: 200, type: User })
@@ -37,7 +34,7 @@ export class UserController {
     @Post()
     @HttpCode(200)
     async createUser(@Body() dto: CreateUserDto): Promise<User> {
-      return this.__userService__.createUser(dto);
+      return this._userService.createUser(dto);
     }
 
     @ApiOperation({ summary: 'Get all users' })
@@ -45,7 +42,7 @@ export class UserController {
     @UseGuards(JwtAuthGuard)
     @Get()
     async getAllUsers(): Promise<User[]> {
-      return this.__userService__.getAllUsers();
+      return this._userService.getAllUsers();
     }
 
     @ApiOperation({ summary: 'Give users role' })
@@ -54,7 +51,7 @@ export class UserController {
     @Post('/addRole')
     @HttpCode(200)
     async addRole(@Body() dto: AddRoleDto): Promise<AddRoleDto> {
-      return this.__userService__.addRole(dto);
+      return this._userService.addRole(dto);
     }
 
     @ApiOperation({ summary: 'To ban a user' })
@@ -62,6 +59,6 @@ export class UserController {
     @Post('/banUser')
     @HttpCode(200)
     async banUser(@Body() dto: BanUserDto): Promise<User> {
-      return this.__userService__.banUser(dto);
+      return this._userService.banUser(dto);
     }
 }

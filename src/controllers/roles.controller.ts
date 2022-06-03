@@ -17,15 +17,14 @@ import {
 
 import { Role } from '../model/roles.model';
 
-import { CreateRoleDto } from '../dto/create-role.dto';
+import { CreateRoleDto } from '../dto';
 
 import { RolesService } from '../services/roles.service';
 
 @ApiTags('Role')
 @Controller('/roles')
 export class RolesController {
-
-    constructor(private readonly __rolesService__: RolesService) {}
+    constructor(private readonly _rolesService: RolesService) {}
 
     @ApiOperation({ summary: 'Create role' })
     @ApiBody({ type: CreateRoleDto })
@@ -33,21 +32,21 @@ export class RolesController {
     @Post()
     @HttpCode(200)
     createRole(@Body() dto: CreateRoleDto) {
-      return this.__rolesService__.createRole(dto);
+      return this._rolesService.createRole(dto);
     }
 
     @ApiOperation({ summary: 'Get All roles' })
     @ApiResponse({ type: [Role] })
     @Get()
     getAllRoles() {
-      return this.__rolesService__.getAllRoles();
+      return this._rolesService.getAllRoles();
     }
 
     @ApiOperation({ summary: 'Get role by value' })
     @ApiResponse({ type: Role })
     @Get(':value')
     getRoleByValue(@Param('value') value: string) {
-      return this.__rolesService__.getRoleByValue(value);
+      return this._rolesService.getRoleByValue(value);
     }
 
     @ApiOperation({ summary: 'Update role by id' })
@@ -58,13 +57,13 @@ export class RolesController {
       @Param('id') id: number,
       @Body() dto: CreateRoleDto,
     ) {
-      return this.__rolesService__.updateRole(dto, id);
+      return this._rolesService.updateRole(dto, id);
     }
 
     @ApiOperation({ summary: 'Delete role by id' })
     @ApiResponse({ status: 200 })
     @Delete(':id')
     deleteRole(@Param('id') id: number) {
-      return this.__rolesService__.deleteRole(id);
+      return this._rolesService.deleteRole(id);
     }
 }
