@@ -15,7 +15,7 @@ import {
     ApiTags
 } from '@nestjs/swagger';
 
-import { Role } from '../model/roles.model';
+import { Role } from '../model';
 
 import { CreateRoleDto } from '../dto';
 

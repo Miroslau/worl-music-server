@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
 
-import { Album } from '../schemas/album.schema';
+import { Album } from '../schemas';
 
 export type AlbumDocument = Album & Document;

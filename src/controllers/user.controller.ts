@@ -14,7 +14,7 @@ import {
     ApiTags
 } from '@nestjs/swagger';
 
-import { User } from '../model/users.model';
+import { User } from '../model';
 
 import { CreateUserDto, AddRoleDto, BanUserDto } from '../dto';
 

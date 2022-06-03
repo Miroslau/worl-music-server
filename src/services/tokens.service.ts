@@ -3,29 +3,28 @@ import { JwtService } from '@nestjs/jwt';
 
 import { nanoid } from 'nanoid';
 
-import { User } from '../model/users.model';
+import { User } from '../model';
 
-import { AuthResponseDto } from '../dto/auth-response.dto';
+import { AuthResponseDto } from '../dto';
 
 import { UserService } from './user.service';
 
 
 @Injectable()
 export class TokensService {
-
     constructor(
-      private readonly __userService__: UserService,
-      private readonly __jwtService__: JwtService,
+      private readonly _userService: UserService,
+      private readonly _jwtService: JwtService,
     ) {}
 
     async refreshTokens(refreshToken: string): Promise<AuthResponseDto> {
       try {
-        const verifiedToken = this.__jwtService__.verify(refreshToken, {
+        const verifiedToken = this._jwtService.verify(refreshToken, {
           secret: 'test-app-refResh-token-secret',
         });
 
         const { userId } = verifiedToken;
-        const user = await this.__userService__.getById(userId);
+        const user = await this._userService.getById(userId);
         const now = new Date();
 
         if (!user || user.tokenId !== refreshToken || now > user.tokenExpire) {
@@ -46,7 +45,7 @@ export class TokensService {
     }
 
     async getTokens(user: User) {
-      const accessToken = this.__jwtService__.sign(
+      const accessToken = this._jwtService.sign(
         { email: user.email, id: user.id, roles: user.roles },
         { secret: 'test-app-access-token-secret', expiresIn: 1000 * 60 * 15 },
       );
@@ -55,7 +54,7 @@ export class TokensService {
 
       const expire = 1000 * 60 * 24 * 15;
 
-      const refreshToken = this.__jwtService__.sign(
+      const refreshToken = this._jwtService.sign(
         { email: user.email, id: user.id, roles: user.roles, refreshTokenId },
         {
           secret: 'test-app-refResh-token-secret',
@@ -71,7 +70,7 @@ export class TokensService {
 
       user.tokenExpire = expiration;
 
-      await this.__userService__.updateUser(user, user.id);
+      await this._userService.updateUser(user, user.id);
 
       return { accessToken, refreshToken };
     }

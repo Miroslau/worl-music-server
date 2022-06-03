@@ -5,18 +5,17 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { AuthService } from '../services/auth.service';
 
-import { User } from '../model/users.model';
+import { User } from '../model';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-
     constructor(
       private readonly authService: AuthService,
     ) {
       super({
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         ignoreExpiration: false,
-        secretOrKey: 'test-app-access-token-secret'
+        secretOrKey: 'test-app-access-token-secret',
       });
     }
 

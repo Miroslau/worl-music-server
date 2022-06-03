@@ -1,4 +1,4 @@
 import { Document } from 'mongoose';
-import { Track } from '../schemas/track.schema';
+import { Track } from '../schemas';
 
 export type TrackDocument = Track & Document;

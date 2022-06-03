@@ -5,17 +5,11 @@ import { Model, ObjectId } from 'mongoose';
 
 import { FileType } from '../enums/file-type';
 
-import { Album } from '../schemas/album.schema';
-import { Track } from '../schemas/track.schema';
-import { Author } from '../schemas/author.schema';
+import { Album, Track, Author } from '../schemas';
 
-import { AlbumDocument } from '../types';
-import { AuthorDocument } from '../types/author-document.type';
-import { TrackDocument } from '../types';
+import { AlbumDocument, AuthorDocument, TrackDocument } from '../types';
 
-import { CreateAlbumDto } from '../dto/create-album.dto';
-import { AddTracksToAlbumDto } from '../dto/create-track.dto';
-import { UpdateAlbumDto } from '../dto/update-album.dto';
+import { CreateAlbumDto, AddTracksToAlbumDto, UpdateAlbumDto } from '../dto';
 
 import { FileService } from './file.service';
 
@@ -23,19 +17,18 @@ import { getAlbumById, getAllAlbums } from '../aggregations/album.aggregation';
 
 @Injectable()
 export class AlbumService {
-
     constructor(
-      @InjectModel(Album.name) private readonly __albumModel__: Model<AlbumDocument>,
-      @InjectModel(Author.name) private readonly __authorModel__: Model<AuthorDocument>,
-      @InjectModel(Track.name) private readonly __trackModel__: Model<TrackDocument>,
-      private readonly fileService: FileService,
+      @InjectModel(Album.name) private readonly _albumModel: Model<AlbumDocument>,
+      @InjectModel(Author.name) private readonly _authorModel: Model<AuthorDocument>,
+      @InjectModel(Track.name) private readonly _trackModel: Model<TrackDocument>,
+      private readonly _fileService: FileService,
     ) {}
 
     async createAlbum(dto: CreateAlbumDto, picture): Promise<Album> {
-      const picturePath = this.fileService.createFile(FileType.IMAGE, picture);
-      const author = await this.__authorModel__.findById(dto.author);
+      const picturePath = this._fileService.createFile(FileType.IMAGE, picture);
+      const author = await this._authorModel.findById(dto.author);
 
-      const album = await this.__albumModel__.create({
+      const album = await this._albumModel.create({
         ...dto,
         picture: picturePath,
       });
@@ -51,10 +44,10 @@ export class AlbumService {
 
     async addTrackToAlbum(dto: AddTracksToAlbumDto): Promise<Album> {
       const { tracks, albumId } = dto;
-      const album = await this.__albumModel__.findById(albumId);
+      const album = await this._albumModel.findById(albumId);
 
       for (const trackId of tracks) {
-        const track = await this.__trackModel__.findById(trackId);
+        const track = await this._trackModel.findById(trackId);
         const { _id } = track;
         const includeTrack = album.tracks.includes(_id);
 
@@ -72,29 +65,29 @@ export class AlbumService {
     }
 
     async getAllAlbums(count = 4, offset = 0): Promise<Album[]> {
-      return this.__albumModel__
-                 .aggregate(getAllAlbums())
-                 .skip(Number(offset))
-                 .limit(Number(count));
+      return this._albumModel
+        .aggregate(getAllAlbums())
+        .skip(Number(offset))
+        .limit(Number(count));
     }
 
     async getAlbumById(id: string): Promise<Album> {
-      const album: Album[] = await this.__albumModel__.aggregate(getAlbumById(id));
+      const album: Album[] = await this._albumModel.aggregate(getAlbumById(id));
 
       return album[0];
     }
 
     async updateAlbum(id: string, dto: UpdateAlbumDto, picture): Promise<Album> {
       const { author, tracks } = dto;
-      const picturePath = this.fileService.createFile(FileType.IMAGE, picture);
-      const authorFromDto = await this.__authorModel__.findById(author);
-      const currentAlbum = await this.__albumModel__.findById(id);
+      const picturePath = this._fileService.createFile(FileType.IMAGE, picture);
+      const authorFromDto = await this._authorModel.findById(author);
+      const currentAlbum = await this._albumModel.findById(id);
 
       if (!currentAlbum) {
         throw new HttpException('The album has not found', HttpStatus.NOT_FOUND);
       }
 
-      const authorFromAlbum = await this.__authorModel__.findById(currentAlbum.author);
+      const authorFromAlbum = await this._authorModel.findById(currentAlbum.author);
 
       if (authorFromDto._id.toString() !== authorFromAlbum._id.toString()) {
         authorFromAlbum.album = authorFromAlbum.album.filter(item => {
@@ -109,13 +102,13 @@ export class AlbumService {
 
       if (tracks) {
         for (const item of currentAlbum.tracks) {
-          await this.__trackModel__
-                    .findById(item)
-                    .updateOne({}, { album: null });
+          await this._trackModel
+            .findById(item)
+            .updateOne({}, { album: null });
         }
 
         for (const trackId of dto.tracks) {
-          const track = await this.__trackModel__.findById(trackId);
+          const track = await this._trackModel.findById(trackId);
           const mongoose = require('mongoose');
 
           track.album = mongoose.Types.ObjectId(id);
@@ -124,7 +117,7 @@ export class AlbumService {
         }
       }
 
-      const album = await this.__albumModel__.findByIdAndUpdate(id, {
+      const album = await this._albumModel.findByIdAndUpdate(id, {
         ...dto,
         picture: picturePath,
       }).setOptions({ overwrite: true, new: true });
@@ -133,9 +126,9 @@ export class AlbumService {
     }
 
     async deleteAlbum(id: string): Promise<ObjectId> {
-      const album = await this.__albumModel__.findByIdAndDelete(id);
+      const album = await this._albumModel.findByIdAndDelete(id);
       const { _id, author, tracks } = album;
-      const authorFromAlbum = await this.__authorModel__.findById(author);
+      const authorFromAlbum = await this._authorModel.findById(author);
       const authorIndex = authorFromAlbum.album.indexOf(_id);
 
       if (authorIndex !== -1) {
@@ -145,12 +138,11 @@ export class AlbumService {
       await authorFromAlbum.save();
 
       for (const trackId of tracks) {
-        await this.__trackModel__
-                  .findById(trackId)
-                  .updateOne({}, { album: null });
+        await this._trackModel
+          .findById(trackId)
+          .updateOne({}, { album: null });
       }
 
       return _id;
     }
-
 }
