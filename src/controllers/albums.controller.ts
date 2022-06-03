@@ -24,7 +24,7 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 import { ObjectId } from 'mongoose';
 
-import { Album } from '../schemas/album.schema';
+import { Album } from '../schemas';
 
 import { CreateAlbumDto, AddTracksToAlbumDto, UpdateAlbumDto } from '../dto';
 

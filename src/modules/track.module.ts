@@ -12,7 +12,7 @@ import {
     AlbumSchema,
 } from '../schemas';
 
-import { TracksController } from '../controllers/track.controller';
+import { TracksController } from '../controllers/tracks.controller';
 
 import { TrackService } from '../services/track.service';
 import { FileService } from '../services/file.service';

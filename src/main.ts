@@ -11,10 +11,10 @@ const start = async () => {
       app.setGlobalPrefix('api');
 
       const config = new DocumentBuilder()
-                         .setTitle('Spotify')
-                         .setDescription(`The Potify's API description`)
-                         .setVersion('0.0.1')
-                         .build();
+        .setTitle('Spotify')
+        .setDescription(`The Potify's API description`)
+        .setVersion('0.0.1')
+        .build();
 
       const document = SwaggerModule.createDocument(app, config);
 

@@ -5,7 +5,7 @@ import { Album, Author, Track, AlbumSchema, AuthorSchema, TrackSchema } from '..
 
 import { AuthorService } from '../services/author.service';
 
-import { AuthorsController } from '../controllers/author.controller';
+import { AuthorsController } from '../controllers/authors.controller';
 
 import { AuthModule } from './auth.module';
 import { RolesModule } from './roles.module';

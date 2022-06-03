@@ -1,7 +1,8 @@
 import {
     Body,
     Controller,
-    Get, HttpCode,
+    Get,
+    HttpCode,
     Post,
     UseGuards,
     UsePipes
@@ -25,7 +26,7 @@ import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
 @ApiTags('User')
 @Controller('/users')
-export class UserController {
+export class UsersController {
     constructor(private readonly _userService: UserService) {}
 
     @ApiOperation({ summary: 'Create user' })
