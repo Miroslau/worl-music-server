@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { ConfigModule } from '@nestjs/config';
 
 import { User, UserRoles, Role } from '../model';
 
@@ -16,22 +17,24 @@ import { RolesModule } from './roles.module';
 import { AuthModule } from './auth.module';
 import { TokensModule } from './tokens.module';
 
+import { MongoDBConfigService } from '../config/mongoDB.config.service';
+import { PostgresConfigService } from '../config/postgres.config.service';
+
 @Module({
     imports: [
+      ConfigModule.forRoot({
+        isGlobal: true,
+      }),
+      MongooseModule.forRootAsync({
+        useClass: MongoDBConfigService,
+        inject: [MongoDBConfigService],
+      }),
+      SequelizeModule.forRootAsync({
+        useClass: PostgresConfigService,
+        inject: [PostgresConfigService],
+      }),
       ServeStaticModule.forRoot({rootPath: path.resolve(__dirname, '..', 'static')}),
       TrackModule,
-      MongooseModule.forRoot('mongodb://mongo/music-platform'),
-      SequelizeModule.forRoot({
-        dialect: 'postgres',
-        host: 'db',
-        port: 5432,
-        username: 'admin',
-        password: 'root',
-        database: 'music-platform',
-        synchronize: true,
-        autoLoadModels: true,
-        models: [User, Role, UserRoles],
-      }),
       FileModule,
       AuthorModule,
       AlbumModule,

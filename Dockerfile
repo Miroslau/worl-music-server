@@ -9,5 +9,6 @@ COPY tsconfig.json ./
 RUN npm install
 
 COPY ./dist ./dist
+COPY . /app
 
 CMD ["npm", "run", "start:dev"]
