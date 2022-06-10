@@ -13,14 +13,20 @@ export class PostgresConfigService implements SequelizeOptionsFactory {
 
   createSequelizeOptions(): SequelizeModuleOptions {
     return {
-      dialect: 'postgres',
-      host: this._configService.get<string>('DATABASE_HOST'),
-      port: this._configService.get<number>('POSTGRES_PORT'),
+      database: this._configService.get<string>('POSTGRES_DATABASE'),
       username: this._configService.get<string>('POSTGRES_USER'),
       password: this._configService.get<string>('POSTGRES_PASSWORD'),
-      database: this._configService.get<string>('POSTGRES_DATABASE'),
+      host: this._configService.get<string>('DATABASE_HOST'),
+      port: this._configService.get<number>('POSTGRES_PORT'),
+      dialect: 'postgres',
       synchronize: true,
       autoLoadModels: true,
+      dialectOptions: {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false,
+        },
+      },
       models: [User, Role, UserRoles],
     };
   }
