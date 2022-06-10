@@ -17,12 +17,12 @@ export class PostgresConfigService implements SequelizeOptionsFactory {
     if (url) {
       return {
         dialect: 'postgres',
-        host: 'ec2-52-214-23-110.eu-west-1.compute.amazonaws.com',
+        host: 'ec2-44-195-169-163.compute-1.amazonaws.com',
         port: 5432,
-        username: 'smpuppjzvjjnxn',
+        username: 'hvvfswbagsoppt',
         password:
-          '196068573add82f070f8faa8d715428ff330a0d1f87c5e2a65fe1b968db81355',
-        database: 'd9vcvevpgrog53',
+          '0d663823c625c1c9df305d658e9e966a8756d5386b8cbd448400dd6a4d38c0b8',
+        database: 'derodaitivshkg',
         synchronize: true,
         autoLoadModels: true,
         models: [User, Role, UserRoles],
