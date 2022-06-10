@@ -4,8 +4,6 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule } from '@nestjs/config';
 
-import { User, UserRoles, Role } from '../model';
-
 import * as path from 'path';
 
 import { TrackModule } from './track.module';
@@ -21,27 +19,29 @@ import { MongoDBConfigService } from '../config/mongoDB.config.service';
 import { PostgresConfigService } from '../config/postgres.config.service';
 
 @Module({
-    imports: [
-      ConfigModule.forRoot({
-        isGlobal: true,
-      }),
-      MongooseModule.forRootAsync({
-        useClass: MongoDBConfigService,
-        inject: [MongoDBConfigService],
-      }),
-      SequelizeModule.forRootAsync({
-        useClass: PostgresConfigService,
-        inject: [PostgresConfigService],
-      }),
-      ServeStaticModule.forRoot({rootPath: path.resolve(__dirname, '..', 'static')}),
-      TrackModule,
-      FileModule,
-      AuthorModule,
-      AlbumModule,
-      UserModule,
-      RolesModule,
-      AuthModule,
-      TokensModule,
-    ],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    MongooseModule.forRootAsync({
+      useClass: MongoDBConfigService,
+      inject: [MongoDBConfigService],
+    }),
+    SequelizeModule.forRootAsync({
+      useClass: PostgresConfigService,
+      inject: [PostgresConfigService],
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: path.resolve(__dirname, '..', 'static'),
+    }),
+    TrackModule,
+    FileModule,
+    AuthorModule,
+    AlbumModule,
+    UserModule,
+    RolesModule,
+    AuthModule,
+    TokensModule,
+  ],
 })
 export class AppModule {}
