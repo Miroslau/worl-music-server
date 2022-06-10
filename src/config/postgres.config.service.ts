@@ -13,7 +13,6 @@ export class PostgresConfigService implements SequelizeOptionsFactory {
 
   createSequelizeOptions(): SequelizeModuleOptions {
     const url = this._configService.get<string>('DATABASE_URL');
-
     if (url) {
       return {
         dialect: 'postgres',
