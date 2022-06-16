@@ -127,7 +127,10 @@ export class AlbumService {
 
     async deleteAlbum(id: string): Promise<ObjectId> {
       const album = await this._albumModel.findByIdAndDelete(id);
-      const { _id, author, tracks } = album;
+      const { _id, author, tracks, picture } = album;
+
+      this._fileService.removeFile(picture);
+
       const authorFromAlbum = await this._authorModel.findById(author);
       const authorIndex = authorFromAlbum.album.indexOf(_id);
 

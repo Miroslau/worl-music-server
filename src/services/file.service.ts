@@ -28,4 +28,19 @@ export class FileService {
           throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
+
+    removeFile(file: string) {
+        try {
+            const fileExtension = file.split('/');
+            const fileType = fileExtension[1];
+            const fileName = fileExtension[2];
+
+            const filePath = path.resolve(__dirname, '..', 'static', fileType);
+
+            fs.unlinkSync(path.resolve(filePath, fileName));
+
+        } catch (e) {
+            throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

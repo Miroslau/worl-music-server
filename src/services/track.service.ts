@@ -75,6 +75,9 @@ export class TrackService {
     async deleteTrack(id: string): Promise<ObjectId> {
       const track = await this._trackModel.findByIdAndDelete(id);
 
+      this._fileService.removeFile(track.picture);
+      this._fileService.removeFile(track.audio);
+
       if (track.album) {
         const album = await this._authorModel.findById(track.album);
         const trackIndex: number = album.tracks.indexOf(track._id);
