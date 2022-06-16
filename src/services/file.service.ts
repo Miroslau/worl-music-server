@@ -10,7 +10,7 @@ import { FileType } from '../enums/file-type';
 
 @Injectable()
 export class FileService {
-    createFile(type: FileType, file): string {
+    createFile(type: FileType, file, host): string {
       try {
         const fileExtension = file.originalname.split('.').pop();
         const fileName = `${uuid.v4()}.${fileExtension}`;
@@ -22,7 +22,7 @@ export class FileService {
 
         fs.writeFileSync(path.resolve(filePath, fileName), file.buffer);
 
-        return `${type}/${fileName}`;
+        return `${host}/${type}/${fileName}`;
 
       } catch (e) {
           throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);

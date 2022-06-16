@@ -24,8 +24,8 @@ export class AlbumService {
       private readonly _fileService: FileService,
     ) {}
 
-    async createAlbum(dto: CreateAlbumDto, picture): Promise<Album> {
-      const picturePath = this._fileService.createFile(FileType.IMAGE, picture);
+    async createAlbum(dto: CreateAlbumDto, picture, host): Promise<Album> {
+      const picturePath = this._fileService.createFile(FileType.IMAGE, picture, host);
       const author = await this._authorModel.findById(dto.author);
 
       const album = await this._albumModel.create({
@@ -77,9 +77,9 @@ export class AlbumService {
       return album[0];
     }
 
-    async updateAlbum(id: string, dto: UpdateAlbumDto, picture): Promise<Album> {
+    async updateAlbum(id: string, dto: UpdateAlbumDto, picture, host): Promise<Album> {
       const { author, tracks } = dto;
-      const picturePath = this._fileService.createFile(FileType.IMAGE, picture);
+      const picturePath = this._fileService.createFile(FileType.IMAGE, picture, host);
       const authorFromDto = await this._authorModel.findById(author);
       const currentAlbum = await this._albumModel.findById(id);
 

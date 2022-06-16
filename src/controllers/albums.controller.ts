@@ -8,8 +8,9 @@ import {
     Post,
     Put,
     Query,
+    Header,
     UploadedFiles,
-    UseInterceptors,
+    UseInterceptors, Headers,
 } from '@nestjs/common';
 
 import {
@@ -46,9 +47,11 @@ export class AlbumsController {
     async createAlbum(
       @Body() dto: CreateAlbumDto,
       @UploadedFiles() files,
+      @Headers() headers,
     ): Promise<Album> {
       const { picture } = files;
-      return this._albumService.createAlbum(dto, picture[0]);
+      const { host } = headers;
+      return this._albumService.createAlbum(dto, picture[0], host);
     }
 
     @ApiOperation({ summary: 'Add tracks to album' })
@@ -91,9 +94,11 @@ export class AlbumsController {
       @Param('id') id: string,
       @Body() dto: UpdateAlbumDto,
       @UploadedFiles() files,
+      @Headers() headers,
     ): Promise<Album> {
       const { picture } = files;
-      return this._albumService.updateAlbum(id, dto, picture[0]);
+      const { host } = headers;
+      return this._albumService.updateAlbum(id, dto, picture[0], host);
     }
 
     @ApiOperation({ summary: 'delete album' })

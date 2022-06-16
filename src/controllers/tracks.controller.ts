@@ -9,6 +9,7 @@ import {
     UploadedFiles,
     Query,
     HttpCode,
+    Headers,
 } from '@nestjs/common';
 
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
@@ -46,8 +47,10 @@ export class TracksController {
     async createTrack(
       @UploadedFiles() files,
       @Body() dto: CreateTrackDto,
+      @Headers() headers,
     ): Promise<Track> {
-      return this._trackService.createTrack(dto, files);
+      const { host } = headers;
+      return this._trackService.createTrack(dto, files, host);
     }
 
     @ApiOperation({ summary: 'Get all tracks' })

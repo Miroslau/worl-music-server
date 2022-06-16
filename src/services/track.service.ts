@@ -25,7 +25,7 @@ export class TrackService {
       private readonly _fileService: FileService,
     ) {}
 
-    async createTrack(dto: CreateTrackDto, files): Promise<Track> {
+    async createTrack(dto: CreateTrackDto, files, host): Promise<Track> {
       if (!files.audio) {
         throw new HttpException('The audio has not found', HttpStatus.NOT_FOUND);
       }
@@ -39,8 +39,8 @@ export class TrackService {
       }
 
       const { picture, audio } = files;
-      const audioPath = this._fileService.createFile(FileType.AUDIO, audio[0]);
-      const picturePath = this._fileService.createFile(FileType.IMAGE, picture[0]);
+      const audioPath = this._fileService.createFile(FileType.AUDIO, audio[0], host);
+      const picturePath = this._fileService.createFile(FileType.IMAGE, picture[0], host);
       const track = await this._trackModel.create({
         ...dto,
         listens: 0,
