@@ -1,16 +1,8 @@
 FROM node:16.14.0
-
+RUN mkdir -p /app
 WORKDIR /app
-
-COPY package*.json ./
-COPY tsconfig.build.json ./
-COPY tsconfig.json ./
-
+COPY package*.json /app/
 RUN npm install
-
+COPY . /app/
 RUN npm run build
-
-COPY ./dist ./dist
-COPY . /app
-
 CMD ["node", "dist/main.js"]
