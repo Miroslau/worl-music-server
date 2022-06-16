@@ -32,7 +32,7 @@ import { PostgresConfigService } from '../config/postgres.config.service';
       inject: [PostgresConfigService],
     }),
     ServeStaticModule.forRoot({
-      rootPath: path.resolve(__dirname, '..', 'static'),
+      rootPath: path.resolve(__dirname, 'static'),
     }),
     TrackModule,
     FileModule,
